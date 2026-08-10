@@ -2,9 +2,32 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "admin\\..+" }],
+      "destination": "/admin"
+    }
+  ],
+
+  "redirects": [
+    {
+      "source": "/admin",
+      "has": [{ "type": "host", "value": "admin\\..+" }],
+      "destination": "/",
+      "permanent": false
+    }
+  ],
+
   "headers": [
     {
       "source": "/admin",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "admin\\..+" }],
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     },
     {

@@ -234,7 +234,7 @@ footer a{color:var(--text-mut)}
 
   <footer>
     Datos anónimos: sin cookies, sin nombre y sin IP.<br>
-    <span id="pieEditor"></span><a href="/">Ver el sitio</a>
+    <span id="pieEditor"></span><a href="/" id="verSitio">Ver el sitio</a>
   </footer>
 </div>
 
@@ -529,6 +529,13 @@ function abrirPanel(){
   el.innerHTML = location.protocol === "file:"
     ? `<a href="../admin.html">Editor del catálogo</a> · `
     : `El editor del catálogo se abre desde tu compu · `;
+
+  /* Si el panel vive en admin.tudominio.com, "/" es el panel mismo:
+     el sitio público es el mismo host sin el "admin." adelante. */
+  const ver = document.getElementById("verSitio");
+  if(ver && /^admin\./.test(location.hostname)){
+    ver.href = location.protocol + "//" + location.hostname.replace(/^admin\./, "") + "/";
+  }
 })();
 
 /* si ya había sesión guardada, entramos derecho */
