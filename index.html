@@ -347,14 +347,89 @@ h1.display em{font-style:normal;color:var(--accent-2);display:block}
 .card .desc::first-letter{color:#b9b9c2}
 
 /* galería: puntitos y aviso de "hay más fotos" */
-.thumb.gal{cursor:pointer}
+.thumb.ficha-link{cursor:pointer}
 .thumb .dots{position:absolute;left:0;right:0;bottom:.4rem;z-index:2;display:flex;justify-content:center;gap:5px}
 .thumb .dots i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);transition:.2s var(--ease)}
 .thumb .dots i.on{background:var(--accent-2);width:14px;border-radius:3px}
-.thumb.gal::before{content:"+ fotos";position:absolute;right:.45rem;top:.45rem;z-index:2;
+.thumb.ficha-link::before{content:"ver más";position:absolute;right:.45rem;top:.45rem;z-index:2;
   font-family:var(--font-mono);font-size:.52rem;letter-spacing:.08em;color:#d8d8de;
   background:rgba(8,8,10,.62);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:.16rem .42rem}
+.thumb.gal::before{content:"+ fotos"}
 .thumb img{transition:opacity .18s var(--ease)}
+.card h3[data-ficha]{cursor:pointer}
+
+/* ============================ FICHA DE PRODUCTO ============================
+   La foto de la tarjeta abre acá: foto grande, galería, descripción completa y
+   precio, sin sacar a la persona del catálogo. La URL queda con #p=ID, así el
+   botón «atrás» del celular cierra la ficha y el link se puede pasar por WhatsApp. */
+.ficha{
+  position:fixed;inset:0;z-index:90;display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(4,4,6,.82);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  opacity:0;visibility:hidden;transition:opacity .28s var(--ease),visibility .28s;
+}
+.ficha[data-open="true"]{opacity:1;visibility:visible}
+.ficha .inner{
+  position:relative;width:100%;max-height:94vh;max-height:94dvh;overflow:auto;overscroll-behavior:contain;
+  background:var(--surface);border-top:2px solid var(--accent);border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:.85rem var(--sp-4) calc(1.1rem + env(safe-area-inset-bottom));
+  transform:translateY(102%);transition:transform .34s var(--ease);
+}
+.ficha[data-open="true"] .inner{transform:none}
+.ficha .bar{width:44px;height:4px;border-radius:2px;background:var(--border-2);margin:0 auto .8rem}
+.ficha .close{position:absolute;top:.65rem;right:.65rem;z-index:4;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--border);background:rgba(10,10,14,.78);color:var(--text);font-size:1.05rem;line-height:1;cursor:pointer}
+.ficha .visor{position:relative;aspect-ratio:1/.86;border-radius:var(--r-sm);overflow:hidden;touch-action:pan-y;
+  box-shadow:inset 0 0 44px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.05)}
+.ficha .visor .lienzo{position:absolute;inset:0;display:grid;place-items:center}
+.ficha .visor img{width:100%;height:100%;object-fit:contain;padding:5%;filter:drop-shadow(0 14px 22px rgba(0,0,0,.7))}
+.ficha .visor .plate .pic{width:52%;height:auto;aspect-ratio:1}
+.ficha .nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--border);background:rgba(8,8,10,.72);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;
+  display:grid;place-items:center;padding:0 0 .18rem}
+.ficha .nav.prev{left:.5rem}
+.ficha .nav.next{right:.5rem}
+.ficha .nav[hidden]{display:none}
+.ficha .visor .dots{position:absolute;left:0;right:0;bottom:.55rem;z-index:3;display:flex;justify-content:center;gap:5px}
+.ficha .visor .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.32);transition:.2s var(--ease)}
+.ficha .visor .dots i.on{background:var(--accent-2);width:16px;border-radius:3px}
+.ficha .meta{display:inline-block;margin-top:.9rem;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-dim)}
+.ficha .meta em{font-style:normal;color:var(--accent-2)}
+.ficha h2{font-family:var(--font-display);font-weight:900;font-size:1.9rem;line-height:1.02;text-transform:uppercase;
+  letter-spacing:.02em;margin:.3rem 0 0}
+.ficha .sub{color:var(--text-mut);font-family:var(--font-mono);font-size:.74rem;letter-spacing:-.02em;margin:.35rem 0 0}
+.ficha .desc{color:#a3a3ad;font-size:.86rem;line-height:1.65;margin:.8rem 0 0;max-width:60ch}
+.ficha .price{font-family:var(--font-display);font-weight:900;font-size:2.4rem;line-height:1;margin:.9rem 0 0;
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:.5rem}
+.ficha .price .old{color:var(--text-dim);font-size:.95rem;text-decoration:line-through;font-weight:400;font-family:var(--font-body)}
+.ficha .price .et{font-family:var(--font-mono);font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--accent);color:#fff;border-radius:3px;padding:.25rem .45rem}
+.ficha .price .et.off{background:#0f8a3c}
+.ficha .price .et.new{background:#1f1f28;color:#d8d8e0}
+.ficha .stock{margin:.5rem 0 0;font-family:var(--font-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mut)}
+.ficha .stock b{color:var(--wa);font-weight:600}
+.ficha .stock b.no{color:var(--text-dim)}
+.ficha .acts{display:flex;gap:.5rem;margin-top:1.1rem}
+.ficha .acts .buy,.ficha .acts .add{flex:1;min-height:50px;display:flex;align-items:center;justify-content:center;gap:.4rem;
+  border-radius:var(--r-sm);cursor:pointer;text-decoration:none;
+  font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:1.02rem;
+  transition:.18s var(--ease)}
+.ficha .acts .buy{background:var(--accent);color:#fff;border:1.2px solid var(--accent)}
+.ficha .acts .add{background:#0c1a11;border:1.2px solid var(--wa);color:var(--wa)}
+.ficha .acts .add[data-in="true"]{background:var(--wa);color:#08130b}
+.ficha .acts .buy:active,.ficha .acts .add:active{transform:scale(.97)}
+.ficha .acts .buy .arw{font-family:var(--font-body);font-size:.8em;opacity:.85}
+@media (min-width:760px){
+  .ficha{align-items:center}
+  .ficha .inner{width:min(880px,92vw);max-height:90vh;max-height:90dvh;padding:1.5rem;
+    border:1px solid var(--border);border-top:3px solid var(--accent);border-radius:var(--r-lg);
+    transform:none;display:grid;grid-template-columns:1.05fr 1fr;gap:1.4rem;align-content:start}
+  .ficha .bar{display:none}
+  .ficha .visor{grid-column:1;grid-row:1/span 2;aspect-ratio:1;align-self:start}
+  .ficha .datos{grid-column:2}
+  .ficha .meta{margin-top:0}
+  .ficha .acts{grid-column:2;align-self:start;margin-top:0}
+}
 
 .card .acts{display:flex;gap:.4rem;margin:.7rem .8rem .8rem}
 .card .acts .add{margin:0;flex:none;width:52px}
@@ -827,6 +902,29 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
   <p class="note">Te respondemos de 8 a 19 h · sábados hasta las 13</p>
 </section>
 
+<!-- ============ FICHA DE PRODUCTO (foto grande + descripción) ============ -->
+<div class="ficha" id="ficha" data-open="false" role="dialog" aria-modal="true" aria-labelledby="fichaTit" aria-hidden="true">
+  <div class="inner" id="fichaInner">
+    <div class="bar" aria-hidden="true"></div>
+    <button class="close" id="fichaClose" aria-label="Cerrar la ficha">&#10005;</button>
+    <div class="visor pegboard" id="fichaVisor">
+      <div class="lienzo" id="fichaLienzo"></div>
+      <button class="nav prev" id="fichaPrev" aria-label="Foto anterior" hidden>&#8249;</button>
+      <button class="nav next" id="fichaNext" aria-label="Foto siguiente" hidden>&#8250;</button>
+      <span class="dots" id="fichaDots" aria-hidden="true"></span>
+    </div>
+    <div class="datos">
+      <span class="meta" id="fichaMeta"></span>
+      <h2 id="fichaTit"></h2>
+      <p class="sub" id="fichaSub"></p>
+      <p class="desc" id="fichaDesc"></p>
+      <p class="price" id="fichaPrecio"></p>
+      <p class="stock" id="fichaStock"></p>
+    </div>
+    <div class="acts" id="fichaActs"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- ============ VENTANA DE ENTRADA · DESTACADOS ============ -->
@@ -905,8 +1003,10 @@ function mediaHTML(p, i){
 }
 function galeriaHTML(p, extra){
   const f = p.fotos || [], multi = f.length > 1;
-  return `<div class="thumb pegboard${multi ? " gal" : ""}"${multi
-      ? ` data-gal="${p.id}" role="button" tabindex="0" aria-label="Ver la siguiente foto de ${p.n}"` : ""}>
+  /* La foto ya no cambia de a una en la tarjeta: abre la ficha, que es donde
+     se ve grande, con la galería completa, la descripción y el precio. */
+  return `<div class="thumb pegboard ficha-link${multi ? " gal" : ""}"
+      data-ficha="${p.id}" role="button" tabindex="0" aria-label="Ver ${p.n} en grande, con descripción y precio">
     ${extra || ""}${mediaHTML(p)}
     ${multi ? `<span class="dots" aria-hidden="true">${f.map((_,k) =>
       `<i class="${k === (galIdx[p.id]||0) ? "on" : ""}"></i>`).join("")}</span>` : ""}
@@ -948,7 +1048,7 @@ function cardHTML(p){
   return `<article class="card">
     ${galeriaHTML(p, p.badge ? `<span class="badge ${p.bcls||""}">${p.badge}</span>` : "")}
     <div class="body">
-      <h3>${p.n}</h3>
+      <h3 data-ficha="${p.id}">${p.n}</h3>
       <p class="sub">${p.s}</p>
       ${p.d ? `<p class="desc">${p.d}</p>` : ""}
       <p class="price">${money(p.p)}${p.old?`<span class="old">${money(p.old)}</span>`:""}</p>
@@ -1037,7 +1137,7 @@ document.addEventListener("click", e => {
     const id = add.dataset.add;
     if(state.order.has(id)){ state.order.delete(id); toast("Quitado del pedido"); }
     else { state.order.set(id, 1); toast("Agregado al pedido"); }
-    renderOrder(); renderGrid(); return;
+    renderOrder(); renderGrid(); pintarFichaActs(); return;
   }
   const inc = e.target.closest("[data-inc]");
   if(inc){ const id=inc.dataset.inc; state.order.set(id, state.order.get(id)+1); renderOrder(); return; }
@@ -1045,17 +1145,10 @@ document.addEventListener("click", e => {
   if(dec){
     const id=dec.dataset.dec, q=state.order.get(id)-1;
     q>0 ? state.order.set(id,q) : state.order.delete(id);
-    renderOrder(); renderGrid(); return;
+    renderOrder(); renderGrid(); pintarFichaActs(); return;
   }
-  const gal = e.target.closest("[data-gal]");
-  if(gal){
-    const p = PRODUCTS.find(x => x.id === gal.dataset.gal);
-    galIdx[p.id] = ((galIdx[p.id] || 0) + 1) % p.fotos.length;
-    const img = gal.querySelector("img");
-    if(img) img.src = FOTOS + p.fotos[galIdx[p.id]];
-    gal.querySelectorAll(".dots i").forEach((d,k) => d.classList.toggle("on", k === galIdx[p.id]));
-    return;
-  }
+  const fic = e.target.closest("[data-ficha]");
+  if(fic){ abrirFicha(fic.dataset.ficha); return; }
   const chip = e.target.closest(".chip");
   if(chip){ setCat(chip.dataset.cat); return; }
   const rubro = e.target.closest(".rubro");
@@ -1128,10 +1221,153 @@ document.getElementById("openSheet").addEventListener("click", openSheet);
 document.getElementById("openSheet2").addEventListener("click", openSheet);
 scrim.addEventListener("click", ()=>{ closeDrawer(); closeSheet(); });
 document.addEventListener("keydown", e => {
-  if(e.key === "Escape"){ closeDrawer(); closeSheet(); return; }
-  if((e.key === "Enter" || e.key === " ") && e.target.closest && e.target.closest("[data-gal]")){
-    e.preventDefault(); e.target.closest("[data-gal]").click();
+  if(e.key === "Escape"){ closeDrawer(); closeSheet(); cerrarFicha(); return; }
+  if((e.key === "Enter" || e.key === " ") && e.target.closest && e.target.closest("[data-ficha]")){
+    e.preventDefault(); e.target.closest("[data-ficha]").click();
   }
+});
+
+/* ================= GESTO: DESLIZAR PARA CERRAR =================
+   Las hojas que suben desde abajo (pedido, ficha, ventana de entrada) se cierran
+   arrastrándolas hacia abajo con el pulgar, como espera cualquiera en el celular.
+   Antes solo salían tocando afuera. `zonaH` marca la parte donde el gesto lateral
+   significa "otra foto" en vez de "cerrar". */
+function gestosHoja(panel, cerrar, opts){
+  const o = opts || {};
+  let y0=0, x0=0, dy=0, dx=0, eje="", activo=false, enZonaH=false;
+
+  panel.addEventListener("touchstart", e => {
+    if(e.touches.length !== 1 || panel.scrollTop > 0){ activo = false; return; }
+    if(o.si && !o.si()){ activo = false; return; }
+    const t = e.touches[0];
+    y0=t.clientY; x0=t.clientX; dy=0; dx=0; eje=""; activo=true;
+    enZonaH = !!(o.zonaH && e.target.closest(o.zonaH));
+  }, {passive:true});
+
+  panel.addEventListener("touchmove", e => {
+    if(!activo) return;
+    const t = e.touches[0];
+    dy = t.clientY - y0; dx = t.clientX - x0;
+    if(!eje){                                   // recién decidimos el eje cuando el dedo se movió de verdad
+      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      eje = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if(eje === "x" && !enZonaH){ activo = false; return; }
+      if(eje === "y") panel.style.transition = "none";
+    }
+    if(eje === "x"){ if(e.cancelable) e.preventDefault(); return; }
+    if(dy <= 0){ panel.style.transform = ""; return; }   // hacia arriba: que scrollee normal
+    panel.style.transform = `translateY(${dy}px)`;
+    if(e.cancelable) e.preventDefault();
+  }, {passive:false});
+
+  const limpiar = () => { activo=false; panel.style.transition=""; panel.style.transform=""; };
+  panel.addEventListener("touchend", () => {
+    if(!activo) return;
+    const salir = eje === "y" && dy > 90;                       // 90px: no se dispara sin querer
+    const paso  = eje === "x" && Math.abs(dx) > 45 ? (dx < 0 ? 1 : -1) : 0;
+    limpiar();
+    if(salir) cerrar();
+    else if(paso && o.onH) o.onH(paso);
+  });
+  panel.addEventListener("touchcancel", limpiar);
+}
+gestosHoja(sheet, closeSheet);
+
+/* ================= FICHA DE PRODUCTO =================
+   Foto grande, galería, descripción y precio de un solo producto. Deja la URL
+   en #p=ID: el botón «atrás» del celular cierra la ficha y el link se puede
+   compartir por WhatsApp y abre directo en ese producto. */
+const ficha      = document.getElementById("ficha");
+const fichaInner = document.getElementById("fichaInner");
+let fProd = null, fIdx = 0, fEmpujada = false;
+
+function pintarFoto(){
+  if(!fProd) return;
+  const f = fProd.fotos || [], multi = f.length > 1;
+  document.getElementById("fichaLienzo").innerHTML = f.length ? mediaHTML(fProd, fIdx) : plateHTML(fProd);
+  document.getElementById("fichaPrev").hidden = !multi;
+  document.getElementById("fichaNext").hidden = !multi;
+  document.getElementById("fichaDots").innerHTML = multi
+    ? f.map((_,k) => `<i class="${k === fIdx ? "on" : ""}"></i>`).join("") : "";
+}
+
+function moverFoto(paso){
+  const f = (fProd && fProd.fotos) || [];
+  if(f.length < 2) return;
+  fIdx = (fIdx + paso + f.length) % f.length;
+  galIdx[fProd.id] = fIdx;                     // la tarjeta queda mostrando la misma foto
+  pintarFoto();
+  const t = document.querySelector(`.thumb[data-ficha="${fProd.id}"]`);
+  if(t){
+    const img = t.querySelector("img");
+    if(img) img.src = FOTOS + f[fIdx];
+    t.querySelectorAll(".dots i").forEach((d,k) => d.classList.toggle("on", k === fIdx));
+  }
+}
+
+function pintarFichaActs(){
+  if(!fProd) return;
+  const enPedido = state.order.has(fProd.id);
+  document.getElementById("fichaActs").innerHTML = `
+    ${fProd.link ? `<a class="buy" href="${fProd.link}" target="_blank" rel="noopener nofollow"
+        aria-label="Comprar ${fProd.n} en la publicación">Comprar <span class="arw">&#8599;</span></a>` : ""}
+    <button class="add" data-add="${fProd.id}" data-in="${enPedido}">
+      <svg width="19" height="19" aria-hidden="true"><use href="#i-wa"/></svg>
+      ${enPedido ? "En el pedido" : "Pedir x WSP"}
+    </button>`;
+}
+
+function abrirFicha(id, empujar){
+  const p = PRODUCTS.find(x => x.id === id);
+  if(!p) return;
+  fProd = p; fIdx = galIdx[p.id] || 0;
+  document.getElementById("fichaMeta").innerHTML = `${p.cat} · <em>${p.id}</em>`;
+  document.getElementById("fichaTit").textContent = p.n;
+  document.getElementById("fichaSub").textContent = p.s || "";
+  const desc = document.getElementById("fichaDesc");
+  desc.textContent = p.d || ""; desc.hidden = !p.d;
+  document.getElementById("fichaPrecio").innerHTML =
+    `<span>${money(p.p)}</span>${p.old ? `<span class="old">${money(p.old)}</span>` : ""}` +
+    (p.badge ? `<span class="et ${p.bcls||""}">${p.badge}</span>` : "");
+  document.getElementById("fichaStock").innerHTML = p.stock
+    ? `<b>En stock</b> · Garantía ${CFG.garantiaDias||90} días`
+    : `<b class="no">Sin stock</b> · consultanos la reposición`;
+  pintarFoto(); pintarFichaActs();
+  fichaInner.scrollTop = 0;
+  ficha.dataset.open = "true"; ficha.setAttribute("aria-hidden","false");
+  document.getElementById("fichaClose").focus();
+  if(empujar !== false){ history.pushState({ficha:p.id}, "", "#p=" + encodeURIComponent(p.id)); fEmpujada = true; }
+}
+
+function cerrarFicha(){
+  if(ficha.dataset.open !== "true") return;
+  ficha.dataset.open = "false"; ficha.setAttribute("aria-hidden","true");
+  fichaInner.style.transform = ""; fichaInner.style.transition = "";
+  fProd = null;
+  if(fEmpujada){ fEmpujada = false; history.back(); }
+  else if(location.hash.indexOf("#p=") === 0){ history.replaceState(null, "", location.pathname + location.search); }
+}
+
+document.getElementById("fichaClose").addEventListener("click", cerrarFicha);
+ficha.addEventListener("click", e => { if(e.target === ficha) cerrarFicha(); });   // tocar afuera
+document.getElementById("fichaPrev").addEventListener("click", e => { e.stopPropagation(); moverFoto(-1); });
+document.getElementById("fichaNext").addEventListener("click", e => { e.stopPropagation(); moverFoto(1); });
+document.getElementById("fichaVisor").addEventListener("click", e => {
+  if(!e.target.closest(".nav")) moverFoto(1);                                     // tocar la foto: la siguiente
+});
+document.addEventListener("keydown", e => {
+  if(ficha.dataset.open !== "true") return;
+  if(e.key === "ArrowRight") moverFoto(1);
+  if(e.key === "ArrowLeft")  moverFoto(-1);
+});
+gestosHoja(fichaInner, cerrarFicha, {zonaH:".visor", onH:moverFoto});
+
+/* el botón «atrás» del celular cierra la ficha en vez de salir del sitio */
+addEventListener("popstate", () => {
+  const m = location.hash.match(/^#p=(.+)$/);
+  const id = m ? decodeURIComponent(m[1]) : "";
+  if(id){ if(!fProd || fProd.id !== id){ fEmpujada = false; abrirFicha(id, false); } }
+  else if(ficha.dataset.open === "true"){ fEmpujada = false; cerrarFicha(); }
 });
 
 /* reveals al hacer scroll */
@@ -1256,6 +1492,8 @@ if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
   document.getElementById("popCta").addEventListener("click", cerrar);
   el.addEventListener("click", e => { if(e.target === el) cerrar(); });
   document.addEventListener("keydown", e => { if(e.key === "Escape" && abierto) cerrar(); });
+  /* en el celular esta ventana es una hoja: también se cierra deslizándola */
+  gestosHoja(el, cerrar, {si: () => matchMedia("(max-width:759px)").matches});
   document.getElementById("popGrid").addEventListener("click", () => setTimeout(cerrar, 400));
 
   if(POPCF.disparo === "tiempo"){
@@ -1327,15 +1565,15 @@ if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
     const t = e.target;
     const add = t.closest("[data-add]");
     if(add){ enviar("producto", {producto: add.dataset.add, dispositivo}); return; }
-    const buy = t.closest(".card .buy, .popitem[href]");
+    const buy = t.closest(".card .buy, .ficha .buy, .popitem[href]");
     if(buy){
-      const card = buy.closest(".card");
-      const id = card ? (card.querySelector("[data-add]")||{dataset:{}}).dataset.add : null;
+      const caja = buy.closest(".card, .ficha");
+      const id = caja ? (caja.querySelector("[data-add]")||{dataset:{}}).dataset.add : null;
       if(id) enviar("producto", {producto:id, dispositivo});
       return;
     }
-    const gal = t.closest("[data-gal]");
-    if(gal) enviar("producto", {producto: gal.dataset.gal, dispositivo});
+    const fic = t.closest("[data-ficha]");                 // abrir la ficha del producto ya es interés
+    if(fic) enviar("producto", {producto: fic.dataset.ficha, dispositivo});
   }, true);
 
   const combo = document.getElementById("comboBtn");
@@ -1349,6 +1587,12 @@ if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
 const initCat = new URL(location).searchParams.get("rubro");
 if(initCat) setCat(initCat); else renderGrid();
 renderOrder();
+
+/* link compartido a un producto: cabeza-tools...#p=ID abre la ficha directo */
+(function fichaDeEntrada(){
+  const m = location.hash.match(/^#p=(.+)$/);
+  if(m) abrirFicha(decodeURIComponent(m[1]), false);
+})();
 </script>
 </body>
 </html>
