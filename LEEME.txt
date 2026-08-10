@@ -3,7 +3,7 @@ CabezaTools — sitio completo
 
 ARCHIVOS
 --------
-  cabezatools.html     el sitio (abrilo con doble clic para probar en local)
+  index.html           el sitio (abrilo con doble clic para probar en local)
   datos.js             productos, promos, combo y configuracion
   fotos/               fotos de producto
   logo-cabezatools.jpg
