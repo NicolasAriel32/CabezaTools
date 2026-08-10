@@ -1,0 +1,65 @@
+CabezaTools — sitio completo
+============================
+
+ARCHIVOS
+--------
+  cabezatools.html     el sitio (abrilo con doble clic para probar en local)
+  datos.js             productos, promos, combo y configuracion
+  fotos/               fotos de producto
+  logo-cabezatools.jpg
+  admin.html           editor del catalogo (se usa desde tu compu, NO se publica)
+  admin/index.html     panel privado con las metricas -> queda en tudominio.com/admin
+  supabase/schema.sql  la base de metricas (ya aplicada, queda como respaldo)
+  vercel.json          configuracion del hosting
+  ver-en-celular.html  visor con marco de telefono
+
+Si separas el HTML de datos.js o de la carpeta fotos/, el catalogo
+aparece vacio o sin imagenes.
+
+
+CARGAR UN PRODUCTO NUEVO
+------------------------
+  1. Abri admin.html y toca "+ Nuevo producto".
+  2. Escribi el nombre PRIMERO (de ahi sale el nombre del archivo de foto).
+  3. Solta las fotos en el recuadro punteado. El panel las achica a 1200 px,
+     las comprime abajo de 150 KB y las renombra solo (sin espacios ni acentos).
+     Caen en tu carpeta Descargas.
+  4. Move esas fotos a la carpeta fotos/.
+  5. Toca "Descargar datos.js" y reemplaza el datos.js viejo por el nuevo.
+  6. Recarga el sitio con Ctrl+F5.
+
+Si el producto todavia no tiene foto no queda un hueco: la tarjeta muestra
+una placa tecnica con el icono, el codigo y el rubro. El dia que cargues la
+foto, la toma sola.
+
+
+PUBLICAR (VERCEL)
+-----------------
+  El sitio queda en la raiz y el panel privado en /admin.
+  Cada vez que subas cambios a GitHub, Vercel republica solo.
+  admin.html y ver-en-celular.html NO se publican (estan en .vercelignore).
+
+
+PANEL PRIVADO /admin
+--------------------
+  Entras con mail y contrasena. Muestra:
+    - cuanta gente entro y cuantas visitas hubo
+    - tiempo medio dentro del sitio
+    - que productos se tocan mas
+    - de donde llegan y cuanto entra por celular
+
+  Los datos son anonimos: sin cookies, sin nombre, sin mail y sin IP.
+  Solo se guarda un identificador al azar que se borra al cerrar la pestana.
+
+  FALTA HACER UNA SOLA VEZ, en supabase.com -> proyecto "cabezatools":
+    1. Authentication > Users > "Add user": crea tu usuario con tu mail y la
+       contrasena que quieras. Esa contrasena la elegis vos y no queda escrita
+       en ningun archivo.
+    2. Authentication > Providers > Email: apaga "Enable sign ups", asi nadie
+       mas se puede registrar.
+    3. SQL Editor, pega esto con el id del usuario que creaste:
+         insert into public.admins (user_id) values ('EL-UUID-DEL-USUARIO');
+       (el UUID lo ves en la lista de Authentication > Users)
+
+  Sin el paso 3 el login entra pero las metricas dan cero: es a proposito,
+  es la segunda cerradura.

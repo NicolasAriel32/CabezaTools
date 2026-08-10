@@ -1,0 +1,13 @@
+# sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# herramientas locales
+.claude/
+
+# entornos y builds
+node_modules/
+.vercel/
+.env
+.env.*

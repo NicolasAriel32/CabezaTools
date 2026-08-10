@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CabezaTools · Panel privado</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Archivo:wght@300;400;500;600&family=Martian+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080a; --surface:#14141a; --surface-2:#1c1c23; --border:#2a2a33; --border-2:#3a3a46;
+  --text:#f4f4f6; --text-mut:#9a9aa5; --text-dim:#63636e;
+  --accent:#e1121c; --accent-2:#ff2e36; --ok:#25d366; --steel:#b9bdc4;
+  --font-display:"Big Shoulders Display",Impact,sans-serif;
+  --font-body:"Archivo",system-ui,sans-serif;
+  --font-mono:"Martian Mono",ui-monospace,monospace;
+  --r-sm:6px; --r-md:12px; --r-lg:18px; --r-pill:999px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.55;
+  background:radial-gradient(90% 55% at 100% 0%,rgba(225,18,28,.10),transparent 62%),var(--bg);
+  min-height:100dvh;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-display);font-weight:900;text-transform:uppercase;letter-spacing:.03em;margin:0;line-height:.95}
+i.r{color:var(--accent-2);font-style:normal}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+:focus-visible{outline:2.5px solid var(--accent-2);outline-offset:3px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none !important}
+
+/* ---------------- entrada ---------------- */
+.login{min-height:100dvh;display:grid;place-items:center;padding:1.2rem}
+.login form{width:min(380px,100%);background:var(--surface);border:1px solid var(--border);
+  border-top:3px solid var(--accent);border-radius:var(--r-lg);padding:1.6rem}
+.login .lbl{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim)}
+.login h1{font-size:2.1rem;margin:.25rem 0 .1rem}
+.login .sub{color:var(--text-mut);font-size:.82rem;margin:0 0 1.3rem}
+label{display:block;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--text-mut);margin:0 0 .3rem}
+input,select{width:100%;background:#0e0e12;border:1px solid var(--border);color:var(--text);
+  border-radius:var(--r-sm);padding:.7rem .8rem;font:inherit;font-size:16px;min-height:46px}
+.campo+.campo{margin-top:.9rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:46px;padding:.6rem 1.1rem;
+  border-radius:var(--r-sm);border:1px solid var(--border-2);background:var(--surface-2);color:var(--text);
+  font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:1.05rem;
+  cursor:pointer;text-decoration:none;transition:transform .12s var(--ease),filter .12s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.sm{min-height:40px;padding:.4rem .75rem;font-size:.9rem}
+.btn.ghost{background:transparent}
+.login .btn{width:100%;margin-top:1.2rem}
+.aviso{margin-top:1rem;border-radius:var(--r-sm);padding:.6rem .75rem;font-size:.78rem;line-height:1.5;
+  background:rgba(225,18,28,.1);border:1px solid #5a1b20;color:#ffb9bc}
+.aviso.info{background:var(--surface-2);border-color:var(--border);color:var(--text-mut)}
+
+/* ---------------- cabecera ---------------- */
+header{position:sticky;top:0;z-index:20;background:rgba(8,8,10,.93);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border)}
+.top{display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;max-width:1080px;margin:0 auto}
+.top .marca{font-family:var(--font-display);font-weight:900;text-transform:uppercase;font-size:1.35rem;letter-spacing:.02em}
+.top .sp{flex:1}
+.chip{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--border);border-radius:var(--r-pill);padding:.28rem .6rem;color:var(--text-mut);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
+
+/* filtros: una sola fila arriba de los datos */
+.filtros{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap;padding:1rem 0 .2rem}
+.filtros .seg{display:flex;gap:.3rem;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-pill);padding:.25rem}
+.filtros .seg button{background:none;border:0;color:var(--text-mut);cursor:pointer;min-height:38px;
+  padding:.3rem .8rem;border-radius:var(--r-pill);font-family:var(--font-mono);font-size:.62rem;letter-spacing:.08em}
+.filtros .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+
+/* ---------------- placas de dato ---------------- */
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.9rem 0 1.4rem}
+@media(min-width:760px){.tiles{grid-template-columns:repeat(3,1fr);gap:.8rem}}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:.85rem .9rem;
+  position:relative;overflow:hidden}
+.tile::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.tile.mut::after{background:var(--border-2)}
+.tile .k{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.11em;text-transform:uppercase;color:var(--text-mut)}
+.tile .v{font-family:var(--font-display);font-weight:900;font-size:2.5rem;line-height:1;margin-top:.3rem}
+.tile .v small{font-size:.42em;font-weight:800;color:var(--text-mut);margin-left:.15em}
+.tile .n{font-size:.7rem;color:var(--text-dim);margin-top:.15rem;line-height:1.35}
+
+/* ---------------- bloques ---------------- */
+.bloque{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);
+  padding:1rem;margin-bottom:1rem}
+.bloque h2{font-size:1.3rem}
+.bloque .cap{color:var(--text-mut);font-size:.76rem;margin:.2rem 0 1rem;line-height:1.45}
+.bloque .cab{display:flex;align-items:flex-start;gap:.6rem}
+.bloque .cab .sp{flex:1}
+
+/* gráfico de barras por día — una sola serie, sin leyenda: el título la nombra */
+.chart{position:relative;width:100%}
+.chart svg{display:block;max-width:100%;overflow:visible}
+.chart .grid line{stroke:var(--border);stroke-width:1}
+.chart .ejeY,.chart .ejeX{font-family:var(--font-mono);font-size:8px;fill:var(--text-dim)}
+.chart rect.barra{fill:#8e2229}                       /* días normales: rojo apagado */
+.chart g.pico rect.barra{fill:var(--accent-2)}        /* el día de más movimiento, a pleno */
+.chart rect.hit{fill:transparent;cursor:pointer}
+.chart g.col:hover rect.barra,.chart g.col:focus-visible rect.barra{fill:#ff6068}
+.tip{position:absolute;z-index:5;pointer-events:none;opacity:0;transform:translate(-50%,-118%);
+  background:#fff;color:#0a0a0c;border-radius:var(--r-sm);padding:.32rem .5rem;white-space:nowrap;
+  font-family:var(--font-mono);font-size:.6rem;line-height:1.35;box-shadow:0 8px 22px rgba(0,0,0,.55);
+  transition:opacity .12s var(--ease)}
+.tip[data-on="true"]{opacity:1}
+.tip b{font-family:var(--font-display);font-size:1rem;display:block}
+
+/* ranking de productos — barra + etiqueta directa */
+.rank{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
+.rank li{display:grid;grid-template-columns:1fr auto;gap:.2rem .6rem;align-items:center}
+.rank .nm{font-size:.84rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .nm code{font-family:var(--font-mono);font-size:.6rem;color:var(--text-dim);margin-right:.4rem}
+.rank .n{font-family:var(--font-display);font-weight:900;font-size:1.25rem;line-height:1}
+.rank .bar{grid-column:1/-1;height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.rank .bar i{display:block;height:100%;border-radius:4px;background:var(--accent-2)}
+.rank li:nth-child(n+4) .bar i{background:var(--steel);opacity:.5}
+
+.lista{list-style:none;margin:0;padding:0;font-size:.85rem}
+.lista li{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.lista li:last-child{border:0}
+.lista b{font-family:var(--font-mono);font-size:.72rem;color:var(--text-mut);font-weight:400}
+
+/* estados */
+.skel{background:linear-gradient(90deg,var(--surface-2) 25%,#26262f 50%,var(--surface-2) 75%);
+  background-size:200% 100%;animation:sk 1.2s linear infinite;border-radius:var(--r-sm);color:transparent}
+@keyframes sk{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.skel{animation:none}}
+.vacio{text-align:center;color:var(--text-mut);padding:1.6rem 1rem;border:1px dashed var(--border);
+  border-radius:var(--r-sm);font-size:.84rem;line-height:1.5}
+.vacio b{display:block;font-family:var(--font-display);font-size:1.25rem;color:var(--text);text-transform:uppercase}
+
+details.tabla{margin-top:.9rem}
+details.tabla summary{cursor:pointer;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-mut);min-height:38px;display:flex;align-items:center}
+details.tabla table{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.8rem}
+details.tabla th,details.tabla td{text-align:left;padding:.35rem .5rem;border-bottom:1px solid var(--border)}
+details.tabla th{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)}
+details.tabla td:last-child,details.tabla th:last-child{text-align:right}
+
+footer{color:var(--text-dim);font-size:.72rem;text-align:center;padding:1.5rem 1rem 2.5rem;line-height:1.6}
+footer a{color:var(--text-mut)}
+</style>
+</head>
+<body>
+
+<!-- ============================ ENTRADA ============================ -->
+<main class="login" id="vLogin">
+  <form id="formLogin" autocomplete="on">
+    <p class="lbl">Acceso privado</p>
+    <h1>Panel <i class="r">CabezaTools</i></h1>
+    <p class="sub">Métricas del sitio. Solo para vos.</p>
+
+    <div class="campo">
+      <label for="email">Usuario (mail)</label>
+      <input id="email" name="email" type="email" autocomplete="username" inputmode="email"
+             required autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="campo">
+      <label for="pass">Contraseña</label>
+      <input id="pass" name="password" type="password" autocomplete="current-password" required>
+    </div>
+
+    <button class="btn primary" type="submit" id="btnEntrar">Entrar</button>
+    <p class="aviso" id="errLogin" hidden role="alert"></p>
+    <p class="aviso info" id="sinConfig" hidden>
+      Todavía no está conectada la base. Completá <code>metricas</code> en
+      <code>datos.js</code> con la URL y la clave pública del proyecto de Supabase.
+    </p>
+  </form>
+</main>
+
+<!-- ============================ PANEL ============================ -->
+<div id="vPanel" hidden>
+  <header>
+    <div class="top">
+      <span class="marca">Cabeza<i class="r">Tools</i></span>
+      <span class="sp"></span>
+      <span class="chip" id="quien">—</span>
+      <button class="btn sm ghost" id="salir" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="filtros">
+      <div class="seg" role="group" aria-label="Período">
+        <button type="button" data-dias="7"  aria-pressed="false">7 días</button>
+        <button type="button" data-dias="30" aria-pressed="true">30 días</button>
+        <button type="button" data-dias="90" aria-pressed="false">90 días</button>
+      </div>
+      <span class="sp" style="flex:1"></span>
+      <button class="btn sm ghost" id="refrescar" type="button">Actualizar</button>
+    </div>
+
+    <p class="aviso" id="errPanel" hidden role="alert"></p>
+
+    <!-- placas: los números que se leen de un vistazo -->
+    <section class="tiles" id="tiles" aria-label="Resumen del período"></section>
+
+    <!-- visitas por día -->
+    <section class="bloque">
+      <div class="cab">
+        <div>
+          <h2>Visitas por día</h2>
+          <p class="cap" id="capDias">Cada barra es un día del período elegido.</p>
+        </div>
+      </div>
+      <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
+      <details class="tabla" id="tablaDias">
+        <summary>Ver los números en tabla</summary>
+        <div></div>
+      </details>
+    </section>
+
+    <!-- productos más tocados -->
+    <section class="bloque">
+      <h2>Productos más tocados</h2>
+      <p class="cap">Cada vez que alguien suma el producto al pedido, abre la publicación o mira las fotos.</p>
+      <div id="topBox"></div>
+    </section>
+
+    <!-- de dónde vienen -->
+    <section class="bloque">
+      <h2>De dónde llegan</h2>
+      <p class="cap">La página anterior a la tuya. «Directo» es escribir la dirección o entrar por un favorito.</p>
+      <div id="origenBox"></div>
+    </section>
+  </main>
+
+  <footer>
+    Datos anónimos: sin cookies, sin nombre y sin IP.<br>
+    <span id="pieEditor"></span><a href="/">Ver el sitio</a>
+  </footer>
+</div>
+
+<script src="../datos.js"></script>
+<script>
+/* ============================================================================
+   Panel privado · CabezaTools
+   Sin librerías: la sesión y las métricas salen de dos llamadas a Supabase.
+   La clave que viaja en el HTML es la pública: con ella solo se pueden
+   escribir eventos. Para leer hace falta el token que devuelve el login, y
+   además estar en la tabla admins.
+   ========================================================================== */
+const CFG = (window.CT_DATA && window.CT_DATA.config) || {};
+const M   = CFG.metricas || {};
+const API = String(M.url || "").replace(/\/+$/, "");
+const KEY = M.clave || "";
+const LS  = "ct_admin_sesion";
+
+const $ = s => document.querySelector(s);
+const vLogin = $("#vLogin"), vPanel = $("#vPanel");
+
+/* ---------------------------------------------------------------- SESIÓN -- */
+function guardarSesion(s){
+  try { localStorage.setItem(LS, JSON.stringify(s)); } catch(e){}
+}
+function leerSesion(){
+  try { return JSON.parse(localStorage.getItem(LS) || "null"); } catch(e){ return null; }
+}
+function borrarSesion(){
+  try { localStorage.removeItem(LS); } catch(e){}
+}
+
+async function auth(ruta, cuerpo){
+  const r = await fetch(`${API}/auth/v1/${ruta}`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", "apikey":KEY },
+    body: JSON.stringify(cuerpo)
+  });
+  const data = await r.json().catch(() => ({}));
+  if(!r.ok) throw new Error(data.error_description || data.msg || data.error || "No se pudo entrar");
+  return data;
+}
+
+/* Si el token venció, lo renovamos con el refresh_token antes de reintentar. */
+async function tokenValido(){
+  const s = leerSesion();
+  if(!s || !s.access_token) return null;
+  if(s.expira && Date.now() < s.expira - 60000) return s.access_token;
+  if(!s.refresh_token) return null;
+  try {
+    const d = await auth("token?grant_type=refresh_token", {refresh_token:s.refresh_token});
+    const nueva = {access_token:d.access_token, refresh_token:d.refresh_token,
+                   expira: Date.now() + (d.expires_in || 3600) * 1000, email:(d.user||{}).email || s.email};
+    guardarSesion(nueva);
+    return nueva.access_token;
+  } catch(e){ return null; }
+}
+
+/* --------------------------------------------------------------- ENTRADA -- */
+if(!API || !KEY) $("#sinConfig").hidden = false;
+
+$("#formLogin").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("#btnEntrar"), err = $("#errLogin");
+  err.hidden = true;
+  if(!API || !KEY){ err.textContent = "Falta conectar la base en datos.js."; err.hidden = false; return; }
+  btn.disabled = true; btn.textContent = "Entrando…";
+  try {
+    const d = await auth("token?grant_type=password", {
+      email: $("#email").value.trim(), password: $("#pass").value
+    });
+    guardarSesion({access_token:d.access_token, refresh_token:d.refresh_token,
+                   expira: Date.now() + (d.expires_in || 3600) * 1000, email:(d.user||{}).email});
+    $("#pass").value = "";
+    abrirPanel();
+  } catch(ex){
+    err.textContent = /invalid/i.test(ex.message)
+      ? "Usuario o contraseña incorrectos."
+      : ex.message;
+    err.hidden = false;
+  } finally {
+    btn.disabled = false; btn.textContent = "Entrar";
+  }
+});
+
+$("#salir").addEventListener("click", () => {
+  borrarSesion();
+  vPanel.hidden = true; vLogin.hidden = false;
+  $("#email").focus();
+});
+
+/* ---------------------------------------------------------------- MÉTRICAS */
+let dias = 30, cargando = false, ultimas = null;
+
+async function pedirMetricas(){
+  const token = await tokenValido();
+  if(!token) throw Object.assign(new Error("sesión vencida"), {sesion:true});
+  const r = await fetch(`${API}/rest/v1/rpc/metricas`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", "apikey":KEY, "Authorization":"Bearer " + token },
+    body: JSON.stringify({dias})
+  });
+  if(r.status === 401 || r.status === 403) throw Object.assign(new Error("sesión vencida"), {sesion:true});
+  if(!r.ok) throw new Error("La base respondió con error " + r.status);
+  return r.json();
+}
+
+const nf = n => Number(n || 0).toLocaleString("es-AR");
+function tiempo(seg){
+  seg = Math.round(seg || 0);
+  if(!seg) return {v:"—", u:""};
+  if(seg < 60) return {v:String(seg), u:"s"};
+  const m = Math.floor(seg / 60), s = seg % 60;
+  return {v:`${m}:${String(s).padStart(2,"0")}`, u:"min"};
+}
+const fecha = d => {
+  try { return new Date(d + "T12:00").toLocaleDateString("es-AR",{day:"2-digit",month:"short"}); }
+  catch(e){ return d; }
+};
+
+function pintarTiles(m){
+  const t = tiempo(m.segundos_medio);
+  const placas = [
+    {k:"Personas",        v:nf(m.personas),  n:"Visitantes distintos en el período"},
+    {k:"Visitas",         v:nf(m.visitas),   n:"Veces que se abrió el sitio"},
+    {k:"Tiempo medio",    v:t.v, u:t.u,      n:"Con la pestaña a la vista"},
+    {k:"Pedidos WhatsApp",v:nf(m.pedidos_wsp), n:"Clics en el botón de cerrar por WhatsApp"},
+    {k:"Combos armados",  v:nf(m.combos),    n:"Veces que tocaron «Armar combo»", mut:true},
+    {k:"Desde el celular",v:nf(m.movil_pct), u:"%", n:"Sobre el total de visitas", mut:true}
+  ];
+  $("#tiles").innerHTML = placas.map(p => `
+    <article class="tile${p.mut ? " mut" : ""}">
+      <p class="k">${p.k}</p>
+      <p class="v">${p.v}${p.u ? `<small>${p.u}</small>` : ""}</p>
+      <p class="n">${p.n}</p>
+    </article>`).join("");
+}
+
+/* Barras por día. Una sola serie: el título la nombra, no hace falta leyenda. */
+function pintarChart(porDia){
+  const caja = $("#chart"), tip = $("#tip");
+  caja.querySelectorAll("svg,.vacio").forEach(n => n.remove());
+  if(!porDia || !porDia.length){
+    caja.insertAdjacentHTML("beforeend",
+      `<div class="vacio"><b>Sin visitas todavía</b>Cuando el sitio esté publicado y alguien entre, acá aparece el movimiento día por día.</div>`);
+    $("#tablaDias").hidden = true;
+    return;
+  }
+  $("#tablaDias").hidden = false;
+
+  // Dibujamos en píxeles reales del contenedor: así el texto de los ejes mide
+  // lo mismo en el celular que en la compu y las barras quedan nítidas.
+  const W = Math.max(Math.round(caja.clientWidth) || 320, 280), H = 170;
+  const mI = 26, mD = 4, mS = 10, mB = 20;
+  const max = Math.max(...porDia.map(d => d.visitas), 1);
+  const escalaY = Math.max(2 * Math.ceil(max / 2), 2);      // par, para que la guía del medio sea entera
+  const ancho = (W - mI - mD) / porDia.length;
+  const alto  = H - mS - mB;
+  const y = v => mS + alto - (v / escalaY) * alto;
+
+  const guias = [0, escalaY / 2, escalaY].map(v =>
+    `<line x1="${mI}" x2="${W-mD}" y1="${y(v)}" y2="${y(v)}"/>
+     <text class="ejeY" x="${mI-6}" y="${y(v)+3}" text-anchor="end">${v}</text>`).join("");
+
+  // una etiqueta cada N días para que no se pisen en el celular
+  const paso = Math.max(Math.ceil(porDia.length / Math.max(Math.floor(W / 58), 2)), 1);
+  const barras = porDia.map((d,i) => {
+    const x = mI + i * ancho;
+    const h = d.visitas ? Math.max((d.visitas / escalaY) * alto, 3) : 0;   // mínimo 3px: un día con 1 visita se tiene que ver
+    const w = Math.max(ancho - 2, 1);                       // 2px de aire entre barras
+    const et = (i % paso === 0 || i === porDia.length - 1)
+      ? `<text class="ejeX" x="${x + w/2}" y="${H-6}" text-anchor="middle">${fecha(d.dia)}</text>` : "";
+    // el día más movido va en rojo pleno; el resto, apagado. Se ve el pico solo.
+    return `<g class="col${d.visitas === max ? " pico" : ""}" tabindex="0" role="listitem"
+              aria-label="${fecha(d.dia)}: ${d.visitas} visitas"
+              data-v="${d.visitas}" data-d="${fecha(d.dia)}">
+      <rect class="hit" x="${x}" y="${mS}" width="${w}" height="${alto}"/>
+      <rect class="barra" x="${x}" y="${y(d.visitas)}" width="${w}" height="${h}" rx="3"/>
+      ${et}</g>`;
+  }).join("");
+
+  caja.insertAdjacentHTML("beforeend",
+    `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="list" aria-label="Visitas por día">
+       <g class="grid">${guias}</g>${barras}</svg>`);
+
+  const svg = caja.querySelector("svg");
+  const mostrar = g => {
+    const r = caja.getBoundingClientRect(), b = g.getBoundingClientRect();
+    tip.innerHTML = `<b>${g.dataset.v}</b>${g.dataset.d}`;
+    tip.style.left = (b.left - r.left + b.width/2) + "px";
+    tip.style.top  = (b.top  - r.top) + "px";
+    tip.dataset.on = "true";
+  };
+  svg.addEventListener("pointerover", e => { const g = e.target.closest(".col"); if(g) mostrar(g); });
+  svg.addEventListener("focusin",     e => { const g = e.target.closest(".col"); if(g) mostrar(g); });
+  ["pointerleave","focusout"].forEach(ev => svg.addEventListener(ev, () => tip.dataset.on = "false"));
+
+  $("#tablaDias").querySelector("div").innerHTML = `
+    <table><caption class="sr">Visitas por día</caption>
+      <thead><tr><th>Día</th><th>Visitas</th></tr></thead>
+      <tbody>${porDia.map(d => `<tr><td>${fecha(d.dia)}</td><td>${d.visitas}</td></tr>`).join("")}</tbody>
+    </table>`;
+}
+
+function nombreProducto(id){
+  const p = (window.CT_DATA && window.CT_DATA.productos || []).find(x => x.id === id);
+  return p ? p.nombre : "(producto dado de baja)";
+}
+
+function pintarTop(top){
+  const box = $("#topBox");
+  if(!top || !top.length){
+    box.innerHTML = `<div class="vacio"><b>Nadie tocó un producto todavía</b>En cuanto empiecen a sumar cosas al pedido, este ranking se llena solo.</div>`;
+    return;
+  }
+  const max = Math.max(...top.map(t => t.clicks), 1);
+  box.innerHTML = `<ol class="rank">${top.map(t => `
+    <li>
+      <span class="nm"><code>${t.producto}</code>${nombreProducto(t.producto)}</span>
+      <span class="n">${nf(t.clicks)}</span>
+      <span class="bar"><i style="width:${Math.max(t.clicks / max * 100, 2)}%"></i></span>
+    </li>`).join("")}</ol>`;
+}
+
+function pintarOrigen(origen){
+  const box = $("#origenBox");
+  if(!origen || !origen.length){
+    box.innerHTML = `<div class="vacio"><b>Sin datos de origen</b>Aparece cuando entre la primera visita.</div>`;
+    return;
+  }
+  box.innerHTML = `<ul class="lista">${origen.map(o =>
+    `<li><span>${o.ref}</span><b>${nf(o.visitas)}</b></li>`).join("")}</ul>`;
+}
+
+function esqueleto(){
+  $("#tiles").innerHTML = Array.from({length:6}, () => `
+    <article class="tile mut"><p class="k skel">cargando</p>
+      <p class="v skel" style="width:60%">00</p><p class="n skel">medida</p></article>`).join("");
+}
+
+async function cargar(){
+  if(cargando) return;
+  cargando = true;
+  $("#errPanel").hidden = true;
+  esqueleto();
+  try {
+    const m = await pedirMetricas();
+    ultimas = m;
+    $("#capDias").textContent = `Cada barra es un día. Período: últimos ${m.dias} días.`;
+    pintarTiles(m);
+    pintarChart(m.por_dia);
+    pintarTop(m.top);
+    pintarOrigen(m.origen);
+  } catch(ex){
+    if(ex.sesion){ borrarSesion(); vPanel.hidden = true; vLogin.hidden = false; $("#email").focus(); return; }
+    $("#tiles").innerHTML = "";
+    const err = $("#errPanel");
+    err.innerHTML = `No pude traer las métricas: ${ex.message}. <button class="btn sm ghost" id="reintentar" type="button" style="margin-left:.5rem">Reintentar</button>`;
+    err.hidden = false;
+    $("#reintentar").addEventListener("click", cargar);
+  } finally {
+    cargando = false;
+  }
+}
+
+document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  dias = Number(b.dataset.dias);
+  cargar();
+}));
+$("#refrescar").addEventListener("click", cargar);
+
+/* el gráfico se dibuja en píxeles reales: al girar el celular hay que rehacerlo */
+let redibujo;
+addEventListener("resize", () => {
+  clearTimeout(redibujo);
+  redibujo = setTimeout(() => { if(ultimas) pintarChart(ultimas.por_dia); }, 180);
+});
+
+function abrirPanel(){
+  const s = leerSesion();
+  $("#quien").textContent = (s && s.email) || "admin";
+  vLogin.hidden = true; vPanel.hidden = false;
+  cargar();
+}
+
+/* El editor del catálogo no se publica (está en .vercelignore): se usa desde
+   tu compu. Por eso el enlace solo aparece cuando abrís esto en local. */
+(function pieEditor(){
+  const el = document.getElementById("pieEditor");
+  if(!el) return;
+  el.innerHTML = location.protocol === "file:"
+    ? `<a href="../admin.html">Editor del catálogo</a> · `
+    : `El editor del catálogo se abre desde tu compu · `;
+})();
+
+/* si ya había sesión guardada, entramos derecho */
+(async function inicio(){
+  if(!API || !KEY) return;
+  if(await tokenValido()) abrirPanel();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CabezaTools · Vista en celular</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Martian+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0c;--panel:#15151b;--border:#2a2a33;--text:#f4f4f6;--mut:#8b8b95;--accent:#ff2e36}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:
+   radial-gradient(90% 60% at 50% 0%,rgba(225,18,28,.18),transparent 60%),var(--bg);
+   color:var(--text);font-family:"Martian Mono",ui-monospace,monospace;
+   display:flex;flex-direction:column;align-items:center;gap:1.2rem;padding:1.6rem 1rem 3rem}
+h1{font-family:"Big Shoulders Display",sans-serif;font-weight:900;text-transform:uppercase;
+   font-size:clamp(1.6rem,5vw,2.6rem);letter-spacing:.04em;margin:0}
+h1 i{color:var(--accent);font-style:normal}
+p.sub{color:var(--mut);font-size:.7rem;letter-spacing:.08em;text-align:center;margin:0;max-width:60ch}
+.controls{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+button{background:var(--panel);border:1px solid var(--border);color:var(--text);
+  padding:.6rem 1rem;border-radius:999px;cursor:pointer;font:inherit;font-size:.68rem;letter-spacing:.06em}
+button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+button:hover{border-color:#4a4a56}
+.stage{display:flex;justify-content:center;width:100%}
+.device{
+  position:relative;background:#1c1c22;border-radius:46px;padding:12px;
+  box-shadow:0 40px 90px -30px #000, 0 0 0 2px #3a3a46 inset;
+  transition:width .3s cubic-bezier(.2,.8,.2,1),height .3s cubic-bezier(.2,.8,.2,1);
+}
+.device::before{content:"";position:absolute;left:50%;top:20px;transform:translateX(-50%);
+  width:86px;height:20px;border-radius:12px;background:#000;z-index:3;pointer-events:none}
+.device iframe{width:100%;height:100%;border:0;border-radius:34px;background:#08080a;display:block}
+.meta{font-size:.62rem;color:var(--mut);letter-spacing:.1em;text-align:center}
+.tips{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.3rem;max-width:70ch}
+.tips h2{font-family:"Big Shoulders Display",sans-serif;font-weight:900;text-transform:uppercase;font-size:1.2rem;letter-spacing:.08em;margin:0 0 .6rem}
+.tips ol{margin:0;padding-left:1.2rem;color:#c9c9d2;font-size:.72rem;line-height:1.9}
+.tips kbd{background:#000;border:1px solid var(--border);border-radius:4px;padding:.05rem .35rem;font-size:.68rem}
+@media (max-width:760px){.device{transform:scale(.78);transform-origin:top center}}
+</style>
+</head>
+<body>
+  <h1>Cabeza<i>Tools</i> · vista responsive</h1>
+  <p class="sub">El sitio real corre dentro del marco. Cambiá el tamaño para ver cómo se adapta. Scrolleá, filtrá, agregá al pedido: todo funciona.</p>
+
+  <div class="controls" id="ctrl">
+    <button data-w="390" data-h="844" aria-pressed="true">iPhone 14 · 390×844</button>
+    <button data-w="430" data-h="932" aria-pressed="false">iPhone Pro Max · 430×932</button>
+    <button data-w="360" data-h="800" aria-pressed="false">Android · 360×800</button>
+    <button data-w="768" data-h="1024" aria-pressed="false">Tablet · 768×1024</button>
+    <button data-w="1280" data-h="800" aria-pressed="false">Desktop · 1280×800</button>
+    <button id="rot">↻ Rotar</button>
+    <button id="newtab">Abrir a pantalla completa ↗</button>
+  </div>
+
+  <div class="stage">
+    <div class="device" id="device" style="width:414px;height:868px">
+      <iframe id="frame" src="cabezatools.html" title="CabezaTools" loading="eager"></iframe>
+    </div>
+  </div>
+  <p class="meta" id="meta">390 × 844 px</p>
+
+  <div class="tips">
+    <h2>Otras formas de verlo como celular</h2>
+    <ol>
+      <li><b>Chrome / Edge:</b> abrí <code>cabezatools.html</code>, apretá <kbd>F12</kbd> y después <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>. Arriba elegís el modelo de celular y podés simular red 4G lenta.</li>
+      <li><b>Firefox:</b> <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> hace lo mismo.</li>
+      <li><b>En tu celular de verdad:</b> mandate <code>cabezatools.html</code> + <code>datos.js</code> + <code>logo-cabezatools.jpg</code> + la carpeta <code>fotos/</code> por Drive a tu teléfono, guardalos juntos y abrí el HTML. Es la prueba que más importa: el pulgar.</li>
+      <li><b>Panel de administración:</b> abrí <code>admin.html</code> para cargar productos, promos y configuración. Ese archivo no va al servidor público.</li>
+      <li><b>Con servidor local</b> (si tenés Node o Python): en la carpeta, <code>npx serve</code> o <code>python -m http.server 8000</code>, y desde el celular en la misma wifi entrás a <code>http://IP-DE-TU-PC:8000/cabezatools.html</code>.</li>
+    </ol>
+  </div>
+
+<script>
+const dev = document.getElementById("device"), meta = document.getElementById("meta");
+let w = 390, h = 844;
+function apply(){
+  dev.style.width = (w + 24) + "px";
+  dev.style.height = (h + 24) + "px";
+  dev.style.borderRadius = (w > 700 ? 22 : 46) + "px";
+  meta.textContent = w + " × " + h + " px";
+}
+document.getElementById("ctrl").addEventListener("click", e => {
+  const b = e.target.closest("button[data-w]");
+  if(!b) return;
+  document.querySelectorAll("button[data-w]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  w = +b.dataset.w; h = +b.dataset.h; apply();
+});
+document.getElementById("rot").addEventListener("click", () => { [w, h] = [h, w]; apply(); });
+document.getElementById("newtab").addEventListener("click", () => window.open("cabezatools.html", "_blank"));
+apply();
+</script>
+</body>
+</html>

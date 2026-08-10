@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CabezaTools · Panel de administración</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Archivo:wght@400;500;600&family=Martian+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080a; --surface:#141419; --surface-2:#1c1c23; --border:#2c2c35; --border-2:#3a3a46;
+  --text:#f4f4f6; --text-mut:#8b8b95; --accent:#e1121c; --accent-2:#ff2e36; --ok:#25d366; --warn:#ffb020;
+  --font-display:"Big Shoulders Display",Impact,sans-serif;
+  --font-body:"Archivo",system-ui,sans-serif;
+  --font-mono:"Martian Mono",ui-monospace,monospace;
+  --r-sm:6px; --r-md:12px; --r-lg:18px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:
+  radial-gradient(80% 50% at 100% 0%,rgba(225,18,28,.10),transparent 60%),var(--bg);
+  color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.5;
+  padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+h1,h2,h3{font-family:var(--font-display);font-weight:900;text-transform:uppercase;letter-spacing:.03em;margin:0}
+h1{font-size:2rem;line-height:1}
+h1 i{color:var(--accent-2);font-style:normal}
+h2{font-size:1.35rem;margin-bottom:.2rem}
+.mono{font-family:var(--font-mono)}
+
+/* topbar */
+header{position:sticky;top:0;z-index:20;background:rgba(8,8,10,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.top{display:flex;align-items:center;gap:.8rem;padding:.9rem 1rem;max-width:1080px;margin:0 auto}
+.top img{width:38px;height:38px;border-radius:8px;object-fit:cover;flex:none}
+.top .sp{flex:1}
+.pill{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--border);border-radius:999px;padding:.3rem .6rem;color:var(--text-mut)}
+.pill.dirty{border-color:var(--warn);color:var(--warn)}
+
+/* tabs */
+nav.tabs{display:flex;gap:.4rem;overflow-x:auto;padding:.6rem 1rem;max-width:1080px;margin:0 auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:none;background:var(--surface);border:1px solid var(--border);color:var(--text-mut);
+  font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:1rem;
+  padding:.55rem 1rem;border-radius:999px;cursor:pointer;min-height:44px}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+section[role="tabpanel"]{padding:1.2rem 0 2rem}
+section[hidden]{display:none}
+.lead{color:var(--text-mut);font-size:.85rem;margin:.2rem 0 1.2rem;max-width:70ch}
+
+/* tarjetas / listas */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1rem;margin-bottom:.7rem}
+.row{display:flex;gap:.8rem;align-items:center}
+.row .grow{flex:1;min-width:0}
+.thumb{width:60px;height:60px;flex:none;border-radius:var(--r-sm);display:grid;place-items:center;overflow:hidden;
+  background:
+    radial-gradient(circle at 5px 5px,#050304 2px,rgba(255,255,255,.06) 2.6px,transparent 3px) 0 0/18px 18px,
+    linear-gradient(160deg,#261115,#0b0608)}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:6%}
+.thumb span{font-family:var(--font-mono);font-size:.5rem;color:#7a6064;text-align:center;line-height:1.2;padding:2px}
+.name{font-family:var(--font-display);font-weight:800;font-size:1.15rem;letter-spacing:.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta{font-family:var(--font-mono);font-size:.6rem;color:var(--text-mut);letter-spacing:.05em}
+.price{font-family:var(--font-display);font-weight:900;font-size:1.3rem}
+.tag{display:inline-block;font-family:var(--font-mono);font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;
+  border-radius:4px;padding:.15rem .4rem;background:var(--surface-2);border:1px solid var(--border);color:var(--text-mut)}
+.tag.on{background:rgba(37,211,102,.14);border-color:var(--ok);color:var(--ok)}
+.tag.off{background:rgba(255,46,54,.12);border-color:var(--accent);color:var(--accent-2)}
+
+/* botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:44px;padding:.6rem 1rem;
+  border-radius:var(--r-sm);border:1px solid var(--border-2);background:var(--surface-2);color:var(--text);
+  font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:1rem;
+  cursor:pointer;text-decoration:none;transition:transform .12s var(--ease),filter .12s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#08130b}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:38px;padding:.4rem .7rem;font-size:.85rem}
+.btn.danger{border-color:#5a1b20;color:#ff8a8f;background:transparent}
+
+/* formularios */
+.form{display:grid;gap:.8rem;grid-template-columns:1fr}
+@media(min-width:720px){.form{grid-template-columns:1fr 1fr}.form .full{grid-column:1/-1}}
+label{display:block;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--text-mut);margin-bottom:.3rem}
+input,select,textarea{width:100%;background:#0e0e12;border:1px solid var(--border);color:var(--text);
+  border-radius:var(--r-sm);padding:.7rem .8rem;font:inherit;font-size:16px;min-height:44px}
+textarea{min-height:80px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
+  outline:2px solid var(--accent-2);outline-offset:2px}
+.check{display:flex;align-items:center;gap:.6rem;min-height:44px}
+.check input{width:22px;height:22px;min-height:0;flex:none;accent-color:var(--accent)}
+.check label{margin:0;font-size:.7rem}
+.hint{font-size:.7rem;color:var(--text-mut);margin-top:.3rem;line-height:1.4}
+
+/* zona para soltar fotos: se achican y comprimen acá adentro, en el navegador.
+   No se sube nada a ningún servidor: salen a la carpeta Descargas y de ahí
+   las copiás a fotos/ */
+.dropz{border:1.5px dashed var(--border-2);border-radius:var(--r-md);background:#0e0e12;padding:.9rem;text-align:center}
+.dropz[data-over="true"]{border-color:var(--accent-2);background:rgba(225,18,28,.07)}
+.dropz p{margin:.5rem 0 0;font-size:.72rem;color:var(--text-mut);line-height:1.45}
+.dropz .tiras{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
+.dropz .tiras:not(:empty){margin-top:.8rem}
+.dropz figure{margin:0;width:78px}
+.dropz figure .thumb{width:78px;height:78px}
+.dropz figcaption{font-family:var(--font-mono);font-size:.48rem;line-height:1.3;color:var(--ok);
+  margin-top:.28rem;word-break:break-all}
+.dropz figcaption span{color:var(--text-mut);display:block}
+
+/* barra inferior */
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(10,10,13,.96);backdrop-filter:blur(10px);
+  border-top:2px solid var(--accent);padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom));
+  display:flex;gap:.6rem;align-items:center}
+.savebar .info{flex:1;min-width:0}
+.savebar .info b{display:block;font-family:var(--font-display);font-size:1.1rem;letter-spacing:.03em}
+.savebar .info span{font-family:var(--font-mono);font-size:.6rem;color:var(--text-mut);letter-spacing:.06em}
+
+dialog{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:var(--r-lg);
+  padding:0;width:min(680px,94vw);max-height:88dvh}
+dialog::backdrop{background:rgba(4,4,6,.8)}
+.dlg-head{display:flex;align-items:center;gap:.6rem;padding:1rem;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0}
+.dlg-body{padding:1rem}
+.dlg-foot{display:flex;gap:.6rem;padding:1rem;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--surface)}
+.dlg-foot .btn{flex:1}
+
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);z-index:60;opacity:0;pointer-events:none;
+  background:#fff;color:#0a0a0c;font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  letter-spacing:.05em;padding:.6rem 1rem;border-radius:999px;transition:.25s var(--ease)}
+.toast[data-show="true"]{opacity:1;transform:translate(-50%,0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.empty{text-align:center;color:var(--text-mut);padding:2rem 1rem;border:1px dashed var(--border);border-radius:var(--r-md)}
+code{font-family:var(--font-mono);font-size:.8em;background:#0e0e12;border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <img src="logo-cabezatools.jpg" alt="">
+    <div>
+      <h1>Panel <i>CabezaTools</i></h1>
+      <span class="meta" id="resumen">—</span>
+    </div>
+    <span class="sp"></span>
+    <span class="pill" id="estado">Sin cambios</span>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" id="t-prod" aria-controls="p-prod" aria-selected="true">Productos</button>
+    <button role="tab" id="t-promo" aria-controls="p-promo" aria-selected="false">Promos</button>
+    <button role="tab" id="t-pop" aria-controls="p-pop" aria-selected="false">Ventana</button>
+    <button role="tab" id="t-cfg" aria-controls="p-cfg" aria-selected="false">Configuración</button>
+    <button role="tab" id="t-ayuda" aria-controls="p-ayuda" aria-selected="false">Cómo publico</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= PRODUCTOS ================= -->
+  <section role="tabpanel" id="p-prod" aria-labelledby="t-prod">
+    <h2>Productos</h2>
+    <p class="lead">Cada ítem del catálogo. Las fotos las soltás dentro del producto: el panel las achica, las comprime y las renombra solo, y vos las copiás a la carpeta <code>fotos/</code>. Si todavía no hay foto, la tarjeta muestra la placa técnica con el ícono, el código y el rubro.</p>
+    <button class="btn primary" id="nuevoProd" style="margin-bottom:1rem">+ Nuevo producto</button>
+    <div id="listaProd"></div>
+  </section>
+
+  <!-- ================= PROMOS ================= -->
+  <section role="tabpanel" id="p-promo" aria-labelledby="t-promo" hidden>
+    <h2>Promos y campañas</h2>
+    <p class="lead">Un descuento por porcentaje se aplica solo en el precio de los productos que alcanza y aparece con la etiqueta roja. Las que tengan <b>Destacar</b> salen en la cinta del home. Las que tienen cupón no cambian el precio: se aplican al cerrar por WhatsApp.</p>
+    <button class="btn primary" id="nuevaPromo" style="margin-bottom:1rem">+ Nueva promo</button>
+    <div id="listaPromo"></div>
+  </section>
+
+  <!-- ================= VENTANA ================= -->
+  <section role="tabpanel" id="p-pop" aria-labelledby="t-pop" hidden>
+    <h2>Ventana de entrada</h2>
+    <p class="lead">Aparece con los productos destacados. <b>Importante:</b> no se dispara apenas entra la persona, sino después de que scrollea (o a los N segundos). Un popup inmediato en celular sube el rebote y Google penaliza los interstitials intrusivos; así conservás el efecto sin pagar ese costo.</p>
+    <div class="card">
+      <div class="form" id="formPop"></div>
+    </div>
+  </section>
+
+  <!-- ================= CONFIG ================= -->
+  <section role="tabpanel" id="p-cfg" aria-labelledby="t-cfg" hidden>
+    <h2>Configuración</h2>
+    <p class="lead">Datos del negocio y textos del hero. Todo esto se refleja en el sitio sin tocar código.</p>
+    <div class="card"><div class="form" id="formCfg"></div></div>
+    <div class="card">
+      <h3 style="font-size:1.1rem;margin-bottom:.8rem">Ítems por rubro (lo que muestran las tarjetas)</h3>
+      <div class="form" id="formRubros"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1.1rem;margin-bottom:.4rem">Cartel «Hoy en el mostrador»</h3>
+      <p class="hint" style="margin-bottom:.8rem">Aparece al costado del título en pantallas grandes. Cada renglón lleva al link de compra del producto; si el producto no tiene link, lleva al catálogo.</p>
+      <div class="form" id="formMostrador"></div>
+    </div>
+  </section>
+
+  <!-- ================= AYUDA ================= -->
+  <section role="tabpanel" id="p-ayuda" aria-labelledby="t-ayuda" hidden>
+    <h2>Cómo publico los cambios</h2>
+    <p class="lead">Este panel no toca el servidor: edita todo en pantalla y te genera el archivo de datos. Así funciona el circuito completo.</p>
+    <div class="card">
+      <ol style="margin:0;padding-left:1.2rem;line-height:2">
+        <li>Cargás o editás productos, promos y configuración acá.</li>
+        <li>Dentro del producto soltás las fotos en el recuadro punteado: salen optimizadas y renombradas a la carpeta <b>Descargas</b>.</li>
+        <li>Movés esas fotos a la carpeta <code>fotos/</code>, al lado del HTML.</li>
+        <li>Tocás <b>Descargar datos.js</b> (botón rojo de abajo).</li>
+        <li>Reemplazás el <code>datos.js</code> viejo por el nuevo, en la misma carpeta que <code>cabezatools.html</code>.</li>
+        <li>Recargás el sitio con <code>Ctrl+F5</code> y listo.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1.1rem;margin-bottom:.6rem">Recomendaciones para las fotos</h3>
+      <p class="hint" style="font-size:.85rem">Cuadradas o casi (1:1 hasta 4:3), fondo recortado o negro, entre 800 y 1200 px de lado, en <b>WebP o JPG bajo 150 KB</b>. El tablero perforado ya va de fondo, así que la herramienta tiene que estar recortada o sobre negro para que se funda bien.</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1.1rem;margin-bottom:.6rem">Cuando el catálogo crezca</h3>
+      <p class="hint" style="font-size:.85rem">Este esquema aguanta cómodo hasta 150–200 productos y una persona editando. Pasado eso, o si querés stock en tiempo real y varios usuarios, el paso siguiente es mover <code>datos.js</code> a una base (Supabase o similar) y que este mismo panel escriba ahí. La estructura de datos ya está pensada para ese salto.</p>
+    </div>
+  </section>
+</main>
+
+<div class="savebar">
+  <div class="info">
+    <b id="barTitulo">datos.js</b>
+    <span id="barSub">todo lo que edites se descarga en un solo archivo</span>
+  </div>
+  <button class="btn ghost sm" id="verJson">Ver JSON</button>
+  <button class="btn primary" id="descargar">Descargar datos.js</button>
+</div>
+
+<!-- ============ DIALOGO PRODUCTO ============ -->
+<dialog id="dlgProd">
+  <form method="dialog">
+    <div class="dlg-head"><h3 id="dlgProdTit">Producto</h3><span class="sp" style="flex:1"></span>
+      <button class="btn ghost sm" value="cancel" type="submit">Cerrar</button></div>
+    <div class="dlg-body"><div class="form" id="formProd"></div></div>
+    <div class="dlg-foot">
+      <button class="btn danger" id="borrarProd" type="button">Borrar</button>
+      <button class="btn primary" id="guardarProd" type="button">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ============ DIALOGO PROMO ============ -->
+<dialog id="dlgPromo">
+  <form method="dialog">
+    <div class="dlg-head"><h3 id="dlgPromoTit">Promo</h3><span style="flex:1"></span>
+      <button class="btn ghost sm" value="cancel" type="submit">Cerrar</button></div>
+    <div class="dlg-body"><div class="form" id="formPromo"></div></div>
+    <div class="dlg-foot">
+      <button class="btn danger" id="borrarPromo" type="button">Borrar</button>
+      <button class="btn primary" id="guardarPromo" type="button">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ============ DIALOGO JSON ============ -->
+<dialog id="dlgJson">
+  <form method="dialog">
+    <div class="dlg-head"><h3>datos.js</h3><span style="flex:1"></span>
+      <button class="btn ghost sm" value="cancel" type="submit">Cerrar</button></div>
+    <div class="dlg-body"><textarea id="jsonOut" readonly style="min-height:50vh;font-family:var(--font-mono);font-size:12px"></textarea></div>
+    <div class="dlg-foot"><button class="btn" id="copiar" type="button">Copiar al portapapeles</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="datos.js"></script>
+<script>
+/* ===================== ESTADO ===================== */
+const D = JSON.parse(JSON.stringify(window.CT_DATA || {config:{},promos:[],productos:[],popup:{}}));
+D.config = D.config || {}; D.promos = D.promos || []; D.productos = D.productos || []; D.popup = D.popup || {};
+let sucio = false;
+D.config.conteoRubros = D.config.conteoRubros || {"Mecánica":0,"Medición":0,"Potencia":0,"Seguridad":0};
+D.config.iconosRubros = D.config.iconosRubros || {};
+const cats = () => Object.keys(D.config.conteoRubros);
+const ICONOS = ["i-socket","i-wrench","i-tap","i-level","i-drill","i-driver","i-bits","i-pliers","i-gloves","i-hammer","i-piston"];
+const fotosDe = p => (p.fotos && p.fotos.length ? p.fotos : (p.foto ? [p.foto] : []));
+const money = n => "$" + Number(n||0).toLocaleString("es-AR");
+
+function marcar(){ sucio = true; const e=document.getElementById("estado"); e.textContent="Cambios sin descargar"; e.classList.add("dirty"); }
+function toast(m){ const t=document.getElementById("toast"); t.textContent=m; t.dataset.show="true"; clearTimeout(t._x); t._x=setTimeout(()=>t.dataset.show="false",1800); }
+function resumen(){ document.getElementById("resumen").textContent =
+  `${D.productos.length} productos · ${D.promos.filter(p=>p.activa).length} promos activas`; }
+
+/* ===================== TABS ===================== */
+document.querySelectorAll('[role="tab"]').forEach(t => t.addEventListener("click", () => {
+  document.querySelectorAll('[role="tab"]').forEach(x => {
+    const on = x === t;
+    x.setAttribute("aria-selected", String(on));
+    document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+  });
+  scrollTo({top:0,behavior:"smooth"});
+}));
+
+/* ===================== CAMPOS ===================== */
+function campo(o){
+  const {k, l, tipo="text", val="", opts, hint, full, min, step, ph} = o;
+  let ctrl;
+  if(tipo === "select"){
+    ctrl = `<select data-k="${k}">${opts.map(v => {
+      const [value,label] = Array.isArray(v) ? v : [v,v];
+      return `<option value="${value}"${String(value)===String(val)?" selected":""}>${label}</option>`;
+    }).join("")}</select>`;
+  } else if(tipo === "textarea"){
+    ctrl = `<textarea data-k="${k}" placeholder="${ph||""}">${val??""}</textarea>`;
+  } else if(tipo === "check"){
+    return `<div class="check ${full?"full":""}"><input type="checkbox" id="c-${k}" data-k="${k}"${val?" checked":""}>
+      <label for="c-${k}">${l}</label></div>`;
+  } else {
+    ctrl = `<input type="${tipo}" data-k="${k}" value="${val??""}"${min!=null?` min="${min}"`:""}${step?` step="${step}"`:""} placeholder="${ph||""}"${tipo==="number"?' inputmode="numeric"':""}>`;
+  }
+  return `<div class="${full?"full":""}"><label for="">${l}</label>${ctrl}${hint?`<p class="hint">${hint}</p>`:""}</div>`;
+}
+function leer(cont, obj){
+  cont.querySelectorAll("[data-k]").forEach(el => {
+    const k = el.dataset.k;
+    if(el.type === "checkbox") obj[k] = el.checked;
+    else if(el.type === "number") obj[k] = el.value === "" ? null : Number(el.value);
+    else obj[k] = el.value;
+  });
+}
+
+/* ===================== PRODUCTOS ===================== */
+const listaProd = document.getElementById("listaProd");
+function pintarProd(){
+  resumen();
+  listaProd.innerHTML = D.productos.length ? D.productos.map((p,i) => `
+    <article class="card">
+      <div class="row">
+        <div class="thumb">${fotosDe(p).length
+          ? `<img src="${(D.config.carpetaFotos||"fotos/")+fotosDe(p)[0]}" alt="" onerror="this.replaceWith(document.createTextNode(''))">`
+          : `<span>sin<br>foto</span>`}</div>
+        <div class="grow">
+          <div class="name">${p.nombre||"(sin nombre)"}</div>
+          <div class="meta">${p.id} · ${p.categoria}${fotosDe(p).length?` · ${fotosDe(p).length} foto${fotosDe(p).length>1?"s":""}`:""}</div>
+          <div style="margin-top:.3rem"><span class="tag ${p.stock!==false?"on":"off"}">${p.stock!==false?"En stock":"Sin stock"}</span>
+            ${p.etiqueta?`<span class="tag">${p.etiqueta}</span>`:""}
+            <span class="tag ${p.link?"on":""}">${p.link?"link de compra":"solo WhatsApp"}</span></div>
+        </div>
+        <div style="text-align:right">
+          <div class="price">${money(p.precio)}</div>
+          <button class="btn sm ghost" data-edit="${i}" style="margin-top:.4rem">Editar</button>
+        </div>
+      </div>
+    </article>`).join("") : `<div class="empty">Todavía no hay productos. Tocá «Nuevo producto».</div>`;
+}
+let idxProd = -1;
+const dlgProd = document.getElementById("dlgProd");
+function abrirProd(i){
+  idxProd = i;
+  const p = i < 0
+    ? {id:"CT-" + Math.floor(1000+Math.random()*8999), nombre:"", sub:"", descripcion:"", precio:0, precioAnterior:null,
+       categoria:cats()[0]||"Mecánica", icono:"i-wrench", fotos:[], link:"", stock:true, etiqueta:"", popularidad:50}
+    : D.productos[i];
+  document.getElementById("dlgProdTit").textContent = i<0 ? "Nuevo producto" : "Editar producto";
+  document.getElementById("borrarProd").style.display = i<0 ? "none" : "";
+  document.getElementById("formProd").innerHTML =
+    campo({k:"id", l:"Código (SKU)", val:p.id, hint:"Se usa en el mensaje de WhatsApp"}) +
+    campo({k:"categoria", l:"Rubro", tipo:"select", val:p.categoria, opts:cats()}) +
+    campo({k:"nombre", l:"Nombre", val:p.nombre, full:true}) +
+    campo({k:"sub", l:"Detalle corto", val:p.sub, full:true, ph:"medidas, piezas, material"}) +
+    campo({k:"descripcion", l:"Descripción breve", tipo:"textarea", val:p.descripcion||"", full:true,
+           ph:"Dos o tres líneas contando para qué sirve y por qué conviene.",
+           hint:"Se muestra en la tarjeta en letra chica e itálica, debajo del detalle. Ideal 200–280 caracteres."}) +
+    campo({k:"precio", l:"Precio de venta", tipo:"number", val:p.precio, min:0}) +
+    campo({k:"precioAnterior", l:"Precio tachado (opcional)", tipo:"number", val:p.precioAnterior ?? "", min:0}) +
+    campo({k:"fotos", l:"Fotos (una por línea)", tipo:"textarea", val:fotosDe(p).join("\n"), full:true,
+           ph:"torquimetro.jpg\ntorquimetro-detalle.jpg",
+           hint:"Archivos dentro de la carpeta fotos/. La primera es la principal; el resto se ve tocando la imagen en la tarjeta."}) +
+    `<div class="full">
+       <label>Cargar fotos desde la compu</label>
+       <div class="dropz" id="dropz">
+         <input type="file" id="fileFotos" accept="image/*" multiple hidden>
+         <button class="btn sm" type="button" id="btnFotos">Elegir fotos</button>
+         <p>O arrastralas acá. Se achican a 1200 px, se comprimen abajo de 150 KB y se
+            renombran solas a partir del nombre del producto (sin espacios ni acentos).
+            Caen en <b>Descargas</b>: copialas dentro de <code>fotos/</code> y listo.
+            El nombre se agrega solo al campo de arriba.</p>
+         <div class="tiras" id="tirasFotos"></div>
+       </div>
+     </div>` +
+    campo({k:"icono", l:"Ícono de respaldo", tipo:"select", val:p.icono, opts:ICONOS}) +
+    campo({k:"link", l:"Link de compra (publicación externa)", tipo:"url", val:p.link||"", full:true,
+           ph:"https://articulo.mercadolibre.com.ar/...",
+           hint:"Si lo cargás, la tarjeta muestra el botón rojo «Comprar ↗» que abre esa página en otra pestaña, y el pedido por WhatsApp queda como botón chico al lado. Si lo dejás vacío, el único botón es «Pedir x WSP»."}) +
+    campo({k:"etiqueta", l:"Etiqueta", tipo:"select", val:p.etiqueta||"", opts:[["","(ninguna)"],"Top","Nuevo","Oferta"]}) +
+    campo({k:"popularidad", l:"Orden en «más pedidos» (0-100)", tipo:"number", val:p.popularidad, min:0}) +
+    campo({k:"stock", l:"Hay stock", tipo:"check", val:p.stock!==false, full:true});
+  conectarDropzone();
+  dlgProd.showModal();
+}
+
+/* ---------- fotos: se optimizan acá adentro, en el navegador ----------
+   No sale nada a internet: se redimensiona en un canvas, se comprime a JPG
+   y se baja a Descargas con un nombre limpio. */
+const LADO_MAX = 1200, PESO_MAX = 150 * 1024;
+
+function slug(s){
+  const TILDES = new RegExp("[\\u0300-\\u036f]", "g");        // marcas de acento sueltas
+  return String(s).normalize("NFD").replace(TILDES, "")
+    .toLowerCase().replace(/["'“”]/g, "").replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "").slice(0, 42) || "producto";
+}
+function nombreLibre(base, usados){
+  let n = base + ".jpg", i = 2;
+  while(usados.has(n.toLowerCase())){ n = base + "-" + i + ".jpg"; i++; }
+  usados.add(n.toLowerCase());
+  return n;
+}
+function cargarImagen(file){
+  if(window.createImageBitmap) return createImageBitmap(file);
+  return new Promise((ok, err) => {                       // respaldo para navegadores viejos
+    const u = URL.createObjectURL(file), im = new Image();
+    im.onload  = () => { URL.revokeObjectURL(u); ok(im); };
+    im.onerror = () => { URL.revokeObjectURL(u); err(new Error("no se pudo leer")); };
+    im.src = u;
+  });
+}
+async function optimizar(file){
+  const im  = await cargarImagen(file);
+  const esc = Math.min(1, LADO_MAX / Math.max(im.width, im.height));
+  const w = Math.round(im.width * esc), h = Math.round(im.height * esc);
+  const cv = document.createElement("canvas");
+  cv.width = w; cv.height = h;
+  cv.getContext("2d").drawImage(im, 0, 0, w, h);
+  if(im.close) im.close();
+  let q = .86, blob = await new Promise(r => cv.toBlob(r, "image/jpeg", q));
+  while(blob && blob.size > PESO_MAX && q > .42){         // bajamos calidad hasta entrar en 150 KB
+    q -= .08;
+    blob = await new Promise(r => cv.toBlob(r, "image/jpeg", q));
+  }
+  return {blob, w, h};
+}
+function bajarArchivo(blob, nombre){
+  const u = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = u; a.download = nombre; a.click();
+  setTimeout(() => URL.revokeObjectURL(u), 5000);
+}
+function conectarDropzone(){
+  const zona = document.getElementById("dropz");
+  if(!zona) return;
+  const input   = document.getElementById("fileFotos");
+  const tiras   = document.getElementById("tirasFotos");
+  const ta      = document.querySelector('#formProd [data-k="fotos"]');
+  const nombreP = document.querySelector('#formProd [data-k="nombre"]');
+
+  document.getElementById("btnFotos").addEventListener("click", () => input.click());
+  input.addEventListener("change", () => { procesar([...input.files]); input.value = ""; });
+  ["dragenter","dragover"].forEach(ev => zona.addEventListener(ev, e => { e.preventDefault(); zona.dataset.over = "true"; }));
+  ["dragleave","dragend"].forEach(ev => zona.addEventListener(ev, () => zona.dataset.over = "false"));
+  zona.addEventListener("drop", e => {
+    e.preventDefault(); zona.dataset.over = "false";
+    procesar([...(e.dataTransfer && e.dataTransfer.files || [])]);
+  });
+
+  async function procesar(files){
+    const imgs = files.filter(f => /^image\//.test(f.type));
+    if(!imgs.length){ toast("Eso no era una imagen"); return; }
+    const usados = new Set();                              // no pisar fotos de otros productos
+    D.productos.forEach(p => fotosDe(p).forEach(f => usados.add(f.toLowerCase())));
+    String(ta.value || "").split(/[\n,]+/).map(s => s.trim()).filter(Boolean)
+      .forEach(f => usados.add(f.toLowerCase()));
+    const base = slug(nombreP.value || "producto");
+    let ok = 0;
+    for(const f of imgs){
+      let r;
+      try { r = await optimizar(f); } catch(err){ toast("No pude leer " + f.name); continue; }
+      if(!r.blob){ toast("No pude procesar " + f.name); continue; }
+      const nombre = nombreLibre(base, usados);
+      bajarArchivo(r.blob, nombre);
+      ta.value = (ta.value.trim() ? ta.value.trim() + "\n" : "") + nombre;
+      tiras.insertAdjacentHTML("beforeend",
+        `<figure><div class="thumb"><img src="${URL.createObjectURL(r.blob)}" alt=""></div>
+         <figcaption>${nombre}<span>${r.w}×${r.h} · ${Math.round(r.blob.size/1024)} KB</span></figcaption></figure>`);
+      ok++;
+    }
+    if(ok) toast(ok === 1 ? "Foto lista en Descargas" : ok + " fotos listas en Descargas");
+  }
+}
+document.getElementById("nuevoProd").addEventListener("click", () => abrirProd(-1));
+listaProd.addEventListener("click", e => { const b = e.target.closest("[data-edit]"); if(b) abrirProd(+b.dataset.edit); });
+document.getElementById("guardarProd").addEventListener("click", () => {
+  const o = idxProd < 0 ? {} : {...D.productos[idxProd]};
+  leer(document.getElementById("formProd"), o);
+  o.fotos = String(o.fotos||"").split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+  delete o.foto;
+  if(!o.nombre){ toast("Falta el nombre"); return; }
+  if(idxProd < 0) D.productos.push(o); else D.productos[idxProd] = o;
+  marcar(); pintarProd(); pintarPop(); pintarCfg(); dlgProd.close(); toast("Producto guardado");
+});
+document.getElementById("borrarProd").addEventListener("click", () => {
+  if(idxProd < 0) return;
+  if(!confirm("¿Borrar «" + D.productos[idxProd].nombre + "»?")) return;
+  D.productos.splice(idxProd,1); marcar(); pintarProd(); pintarPop(); pintarCfg(); dlgProd.close(); toast("Producto borrado");
+});
+
+/* ===================== PROMOS ===================== */
+const listaPromo = document.getElementById("listaPromo");
+function pintarPromo(){
+  resumen();
+  listaPromo.innerHTML = D.promos.length ? D.promos.map((p,i) => `
+    <article class="card">
+      <div class="row">
+        <div class="grow">
+          <div class="name">${p.nombre||"(sin nombre)"}</div>
+          <div class="meta">${p.texto||""}</div>
+          <div style="margin-top:.4rem">
+            <span class="tag ${p.activa?"on":"off"}">${p.activa?"Activa":"Pausada"}</span>
+            <span class="tag">${p.tipo==="porcentaje" ? p.valor+"%" : p.tipo}</span>
+            <span class="tag">${p.alcance==="todo"?"todo el catálogo":p.objetivo||p.alcance}</span>
+            ${p.cupon?`<span class="tag">cupón ${p.cupon}</span>`:""}
+            ${p.destacar?`<span class="tag">en el home</span>`:""}
+          </div>
+          <div class="meta" style="margin-top:.4rem">${p.desde||"—"} → ${p.hasta||"—"}</div>
+        </div>
+        <button class="btn sm ghost" data-editp="${i}">Editar</button>
+      </div>
+    </article>`).join("") : `<div class="empty">No hay promos cargadas.</div>`;
+}
+let idxPromo = -1;
+const dlgPromo = document.getElementById("dlgPromo");
+function abrirPromo(i){
+  idxPromo = i;
+  const hoy = new Date().toISOString().slice(0,10);
+  const p = i < 0
+    ? {id:"PROMO-"+(D.promos.length+1), nombre:"", texto:"", detalle:"", tipo:"porcentaje", valor:10,
+       alcance:"todo", objetivo:"", desde:hoy, hasta:hoy, cupon:"", activa:true, destacar:true}
+    : D.promos[i];
+  document.getElementById("dlgPromoTit").textContent = i<0 ? "Nueva promo" : "Editar promo";
+  document.getElementById("borrarPromo").style.display = i<0 ? "none" : "";
+  document.getElementById("formPromo").innerHTML =
+    campo({k:"nombre", l:"Nombre interno", val:p.nombre}) +
+    campo({k:"id", l:"Código", val:p.id}) +
+    campo({k:"texto", l:"Título que ve el cliente", val:p.texto, full:true, ph:"15% en todo Mecánica"}) +
+    campo({k:"detalle", l:"Letra chica", tipo:"textarea", val:p.detalle, full:true}) +
+    campo({k:"tipo", l:"Tipo", tipo:"select", val:p.tipo, opts:[["porcentaje","% de descuento"],["monto","Beneficio (sin tocar precio)"],["2x1","2x1"]]}) +
+    campo({k:"valor", l:"Valor (%)", tipo:"number", val:p.valor, min:0}) +
+    campo({k:"alcance", l:"Se aplica a", tipo:"select", val:p.alcance, opts:[["todo","Todo el catálogo"],["categoria","Un rubro"],["producto","Un producto"]]}) +
+    campo({k:"objetivo", l:"Rubro o código de producto", val:p.objetivo, hint:"Ej: Mecánica · o CT-1042"}) +
+    campo({k:"desde", l:"Desde", tipo:"date", val:p.desde}) +
+    campo({k:"hasta", l:"Hasta", tipo:"date", val:p.hasta}) +
+    campo({k:"cupon", l:"Cupón (opcional)", val:p.cupon, hint:"Si ponés cupón, el precio NO baja solo: se aplica al cerrar por WhatsApp"}) +
+    campo({k:"activa", l:"Activa", tipo:"check", val:p.activa}) +
+    campo({k:"destacar", l:"Mostrar en la cinta del home", tipo:"check", val:p.destacar});
+  dlgPromo.showModal();
+}
+document.getElementById("nuevaPromo").addEventListener("click", () => abrirPromo(-1));
+listaPromo.addEventListener("click", e => { const b = e.target.closest("[data-editp]"); if(b) abrirPromo(+b.dataset.editp); });
+document.getElementById("guardarPromo").addEventListener("click", () => {
+  const o = idxPromo < 0 ? {} : {...D.promos[idxPromo]};
+  leer(document.getElementById("formPromo"), o);
+  if(!o.nombre){ toast("Falta el nombre"); return; }
+  if(idxPromo < 0) D.promos.push(o); else D.promos[idxPromo] = o;
+  marcar(); pintarPromo(); dlgPromo.close(); toast("Promo guardada");
+});
+document.getElementById("borrarPromo").addEventListener("click", () => {
+  if(idxPromo < 0) return;
+  if(!confirm("¿Borrar la promo?")) return;
+  D.promos.splice(idxPromo,1); marcar(); pintarPromo(); dlgPromo.close(); toast("Promo borrada");
+});
+
+/* ===================== VENTANA DE ENTRADA ===================== */
+const formPop = document.getElementById("formPop");
+function pintarPop(){
+  const p = D.popup;
+  formPop.innerHTML =
+    campo({k:"activo", l:"Mostrar la ventana", tipo:"check", val:p.activo!==false, full:true}) +
+    campo({k:"titulo", l:"Título", val:p.titulo||""}) +
+    campo({k:"cta", l:"Texto del botón", val:p.cta||""}) +
+    campo({k:"bajada", l:"Bajada", tipo:"textarea", val:p.bajada||"", full:true}) +
+    campo({k:"disparo", l:"Cuándo aparece", tipo:"select", val:p.disparo||"scroll",
+           opts:[["scroll","Cuando scrollea un poco (recomendado)"],["tiempo","A los N segundos"]]}) +
+    campo({k:"segundos", l:"Segundos (si elegiste tiempo)", tipo:"number", val:p.segundos||7, min:1}) +
+    campo({k:"unaVezPorVisita", l:"Mostrarla una sola vez por visita", tipo:"check", val:p.unaVezPorVisita!==false, full:true}) +
+    `<div class="full"><label>Productos que muestra (3 recomendado)</label>
+      <div id="popPicks" style="display:grid;gap:.4rem;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+      ${D.productos.map(x => `<label class="check" style="background:#0e0e12;border:1px solid var(--border);border-radius:6px;padding:.2rem .6rem">
+        <input type="checkbox" data-pid="${x.id}"${(p.productos||[]).includes(x.id)?" checked":""}>
+        <span style="font-size:.78rem">${x.nombre}</span></label>`).join("")}
+      </div>
+      <p class="hint">Se muestran en el orden en que los elegiste en la lista de productos.</p></div>`;
+}
+formPop.addEventListener("change", () => {
+  leer(formPop, D.popup);
+  D.popup.productos = [...formPop.querySelectorAll("[data-pid]")].filter(c => c.checked).map(c => c.dataset.pid);
+  marcar();
+});
+
+/* ===================== CONFIG ===================== */
+const formCfg = document.getElementById("formCfg"), formRubros = document.getElementById("formRubros"),
+      formMostrador = document.getElementById("formMostrador");
+function pintarCfg(){
+  const c = D.config;
+  formCfg.innerHTML =
+    campo({k:"marca", l:"Nombre del negocio", val:c.marca}) +
+    campo({k:"zona", l:"Zona / bajada del logo", val:c.zona}) +
+    campo({k:"whatsapp", l:"WhatsApp (formato wa.me)", val:c.whatsapp, hint:"54 + 9 + área sin 0 + número sin 15. Ej: 5491122463840"}) +
+    campo({k:"whatsappVisible", l:"WhatsApp como se muestra", val:c.whatsappVisible}) +
+    campo({k:"horarioLargo", l:"Horario de atención", val:c.horarioLargo, full:true}) +
+    campo({k:"garantiaDias", l:"Garantía (días)", tipo:"number", val:c.garantiaDias, min:0}) +
+    campo({k:"despachoHoras", l:"Despacho (texto corto)", val:c.despachoHoras, ph:"24 H"}) +
+    campo({k:"corteDespacho", l:"Hora de corte", val:c.corteDespacho, ph:"15 h"}) +
+    campo({k:"envioGratisDesde", l:"Envío gratis desde ($)", tipo:"number", val:c.envioGratisDesde, min:0}) +
+    campo({k:"cuotas", l:"Cuotas sin interés", tipo:"number", val:c.cuotas, min:0}) +
+    campo({k:"mayoristaDesde", l:"Lista mayorista desde ($)", tipo:"number", val:c.mayoristaDesde, min:0}) +
+    campo({k:"carpetaFotos", l:"Carpeta de fotos", val:c.carpetaFotos, hint:"Dejalo en fotos/ salvo que la muevas"}) +
+    campo({k:"heroLinea1", l:"Título · línea 1", val:c.heroLinea1}) +
+    campo({k:"heroLinea2", l:"Título · línea 2", val:c.heroLinea2}) +
+    campo({k:"heroDestaque", l:"Título · línea 3 (en rojo)", val:c.heroDestaque}) +
+    campo({k:"heroMetrica", l:"Métrica del hero", val:c.heroMetrica, ph:"+50"}) +
+    campo({k:"heroMetricaLabel", l:"Etiqueta de la métrica", val:c.heroMetricaLabel, ph:"Productos"}) +
+    campo({k:"heroBajada", l:"Bajada del hero", tipo:"textarea", val:c.heroBajada, full:true});
+  formRubros.innerHTML = cats().map(cat => `
+    <div class="full" style="display:grid;grid-template-columns:1fr 110px 150px 44px;gap:.5rem;align-items:end">
+      <div><label>Rubro</label><input value="${cat}" data-ren="${cat}"></div>
+      <div><label>Ítems</label><input type="number" min="0" inputmode="numeric" value="${(c.conteoRubros||{})[cat] ?? 0}" data-num="${cat}"></div>
+      <div><label>Ícono</label><select data-ico="${cat}">${ICONOS.map(ic =>
+        `<option value="${ic}"${(c.iconosRubros||{})[cat]===ic?" selected":""}>${ic.replace("i-","")}</option>`).join("")}</select></div>
+      <button class="btn danger sm" data-delcat="${cat}" title="Borrar rubro" aria-label="Borrar rubro ${cat}">✕</button>
+    </div>`).join("") +
+    `<div class="full"><button class="btn sm" id="addCat" type="button">+ Agregar rubro</button>
+      <p class="hint">Si renombrás un rubro, acordate de cambiarlo también en los productos que lo usan.</p></div>`;
+
+  formMostrador.innerHTML =
+    campo({k:"mostradorTitulo", l:"Título del cartel", val:c.mostradorTitulo||"Hoy en el mostrador", full:true}) +
+    `<div class="full"><label>Productos del cartel (4 recomendado)</label>
+      <div style="display:grid;gap:.4rem;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+      ${D.productos.map(x => `<label class="check" style="background:#0e0e12;border:1px solid var(--border);border-radius:6px;padding:.2rem .6rem">
+        <input type="checkbox" data-mid="${x.id}"${(c.mostrador||[]).includes(x.id)?" checked":""}>
+        <span style="font-size:.78rem">${x.nombre}${x.link?" ↗":""}</span></label>`).join("")}
+      </div></div>`;
+}
+formMostrador.addEventListener("change", () => {
+  const t = formMostrador.querySelector('[data-k="mostradorTitulo"]');
+  if(t) D.config.mostradorTitulo = t.value;
+  D.config.mostrador = [...formMostrador.querySelectorAll("[data-mid]")].filter(c => c.checked).map(c => c.dataset.mid);
+  marcar();
+});
+formCfg.addEventListener("change", () => { leer(formCfg, D.config); marcar(); });
+formRubros.addEventListener("change", e => {
+  const conteo = {}, iconos = {};
+  formRubros.querySelectorAll("[data-ren]").forEach(inp => {
+    const viejo = inp.dataset.ren, nuevo = inp.value.trim() || viejo;
+    conteo[nuevo] = Number(formRubros.querySelector(`[data-num="${CSS.escape(viejo)}"]`).value || 0);
+    iconos[nuevo] = formRubros.querySelector(`[data-ico="${CSS.escape(viejo)}"]`).value;
+    if(nuevo !== viejo) D.productos.forEach(p => { if(p.categoria === viejo) p.categoria = nuevo; });
+  });
+  D.config.conteoRubros = conteo;
+  D.config.iconosRubros = iconos;
+  marcar();
+  if(e.target.matches("[data-ren]")){ pintarCfg(); pintarProd(); }
+});
+formRubros.addEventListener("click", e => {
+  if(e.target.id === "addCat"){
+    const nom = prompt("Nombre del rubro nuevo:");
+    if(!nom || !nom.trim()) return;
+    D.config.conteoRubros[nom.trim()] = 0;
+    D.config.iconosRubros[nom.trim()] = "i-wrench";
+    marcar(); pintarCfg(); toast("Rubro agregado");
+    return;
+  }
+  const del = e.target.closest("[data-delcat]");
+  if(del){
+    const cat = del.dataset.delcat;
+    const usados = D.productos.filter(p => p.categoria === cat).length;
+    if(usados && !confirm(`Hay ${usados} producto(s) en «${cat}». Si lo borrás quedan sin rubro. ¿Seguir?`)) return;
+    delete D.config.conteoRubros[cat]; delete D.config.iconosRubros[cat];
+    marcar(); pintarCfg(); toast("Rubro borrado");
+  }
+});
+
+/* ===================== SALIDA ===================== */
+function generar(){
+  const cab =
+`/* ============================================================================
+   CabezaTools · datos.js — generado desde admin.html el ${new Date().toLocaleString("es-AR")}
+   Reemplazá este archivo en la carpeta del sitio y recargá con Ctrl+F5.
+   ========================================================================== */
+`;
+  return cab + "window.CT_DATA = " + JSON.stringify(D, null, 2) + ";\n";
+}
+document.getElementById("verJson").addEventListener("click", () => {
+  document.getElementById("jsonOut").value = generar();
+  document.getElementById("dlgJson").showModal();
+});
+document.getElementById("copiar").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(generar()); toast("Copiado"); }
+  catch(e){ document.getElementById("jsonOut").select(); toast("Copiá con Ctrl+C"); }
+});
+document.getElementById("descargar").addEventListener("click", () => {
+  const blob = new Blob([generar()], {type:"text/javascript;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "datos.js";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  sucio = false;
+  const e = document.getElementById("estado"); e.textContent = "Descargado"; e.classList.remove("dirty");
+  toast("datos.js descargado");
+});
+addEventListener("beforeunload", e => { if(sucio){ e.preventDefault(); e.returnValue = ""; } });
+
+/* ===================== ARRANQUE ===================== */
+pintarProd(); pintarPromo(); pintarPop(); pintarCfg(); resumen();
+</script>
+</body>
+</html>
