@@ -20,7 +20,7 @@ window.CT_DATA = {
     garantiaDias:     90,
     despachoHoras:    "24 H",
     corteDespacho:    "15 h",
-    envioGratisDesde: 100000,
+    envioGratisDesde: 0,          // 0 = no hay envío gratis, va a cargo del comprador
     cuotas:           12,
     mayoristaDesde:   150000,
     carpetaFotos:     "fotos/",
@@ -46,8 +46,8 @@ window.CT_DATA = {
     // Rubros del catálogo. La clave es el nombre que se muestra y el que usan
     // los productos en su campo "categoria". El número es lo que dice la tarjeta.
     conteoRubros: {
-      "Mecánica": 28, "Medición": 9, "Potencia": 11,
-      "Pinzas y alicates": 7, "Obra": 5, "Seguridad": 6
+      "Mecánica": 12, "Medición": 1, "Potencia": 4,
+      "Pinzas y alicates": 2, "Obra": 1, "Seguridad": 1
     },
     iconosRubros: {
       "Mecánica": "i-socket", "Medición": "i-level", "Potencia": "i-drill",
@@ -104,8 +104,8 @@ window.CT_DATA = {
       desde: "2026-08-10",
       hasta: "2026-08-17",
       cupon: "",
-      activa: true,
-      destacar: true            // true = se muestra en la cinta de promos del home
+      activa: false,            // dada de baja el 2026-08-17
+      destacar: false           // true = se muestra en la cinta de promos del home
     },
     {
       id: "PROMO-2",
@@ -119,8 +119,8 @@ window.CT_DATA = {
       desde: "2026-08-01",
       hasta: "2026-12-31",
       cupon: "",
-      activa: true,
-      destacar: true
+      activa: false,            // dada de baja el 2026-08-17: envío a cargo del comprador
+      destacar: false
     },
     {
       id: "PROMO-3",
@@ -180,9 +180,48 @@ window.CT_DATA = {
     { id:"CT-9060", nombre:"Juego de tubos y puntas 108 pz",
       sub:"CR-V · 1/4\" y 1/2\" · maletín rígido",
       descripcion:"Tubos, puntas, extensiones y crique en un solo maletín con cada pieza en su lugar. Cromo vanadio: aguanta el apriete sin redondear la cabeza del bulón.",
-      precio:89900, precioAnterior:112000, categoria:"Mecánica", icono:"i-socket",
-      fotos:["juego-tubos-108.jpg","juego-tubos-108-detalle.jpg"],
+      precio:65000, precioAnterior:89900, categoria:"Mecánica", icono:"i-socket",
+      fotos:["tubos-108-abierto-1.jpg","tubos-108-abierto-2.jpg",
+             "tubos-108-abierto-3.jpg","tubos-108-caja.jpg"],
       link:"", stock:true, etiqueta:"Top", popularidad:94 },
+
+    { id:"CT-9090", nombre:"Set de herramientas 46 pz",
+      sub:"tubos + puntas · encastre 1/4\" · estuche rígido",
+      descripcion:"Crique de 1/4\", tubos, veintiún puntas, extensiones y barra T en un estuche que cierra y no pierde una pieza. El kit chico que resuelve el service completo de una moto o el armado de un mueble.",
+      precio:25000, precioAnterior:null, categoria:"Mecánica", icono:"i-socket",
+      fotos:["set-46-abierto-1.jpg","set-46-abierto-2.jpg",
+             "set-46-abierto-3.jpg","set-46-caja-1.jpg","set-46-caja-2.jpg"],
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:83 },
+
+    { id:"CT-9100", nombre:"Caja de herramientas 40 pz",
+      sub:"vasos 1/4\" y 3/8\" · trinquete reversible · estuche",
+      descripcion:"Mango de trinquete reversible de 3/8\", vasos en pulgadas y milímetros, adaptador y mango giratorio. Entra en la mochila y cubre el 90% de los aprietes de todos los días.",
+      precio:9900, precioAnterior:null, categoria:"Mecánica", icono:"i-socket",
+      fotos:["set-40-abierto-1.jpg","set-40-abierto-2.jpg",
+             "set-40-abierto-3.jpg","set-40-caja-1.jpg","set-40-caja-2.jpg"],
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:80 },
+
+    { id:"CT-9110", nombre:"Criquera 1/2\" + 10 tubos + extensión",
+      sub:"12 pz · CR-V · encastre 1/2\"",
+      descripcion:"La criquera gruesa para el bulón que no afloja: encastre de 1/2\", diez tubos y una extensión. Cromo vanadio, la medida que hace falta cuando el juego chico se queda corto.",
+      precio:21600, precioAnterior:null, categoria:"Mecánica", icono:"i-socket",
+      fotos:["criquera-12-blister-1.jpg","criquera-12-blister-2.jpg",
+             "criquera-12-blister-3.jpg","criquera-12-caja-1.jpg","criquera-12-caja-2.jpg"],
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:78 },
+
+    { id:"CT-9120", nombre:"Juego de llaves combinadas 12 pz",
+      sub:"Alpina · Cr-V · 6 a 24 mm",
+      descripcion:"Doce medidas de 6 a 24 mm, boca fija de un lado y estrella del otro. Cromo vanadio con tratamiento térmico y terminación pulida: el juego que se compra una vez y queda para siempre en la caja.",
+      precio:37600, precioAnterior:null, categoria:"Mecánica", icono:"i-wrench",
+      fotos:["llaves-combinadas-1.jpg","llaves-combinadas-2.jpg","llaves-combinadas-3.jpg"],
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:84 },
+
+    { id:"CT-9130", nombre:"Juego de llaves combinadas 8 pz",
+      sub:"Alpina · Cr-V · medidas de uso diario",
+      descripcion:"Las ocho medidas que salen todos los días, sin pagar por las que nunca usás. Mismo acero y misma terminación que el juego grande, en el tamaño que entra en cualquier bolso.",
+      precio:15800, precioAnterior:null, categoria:"Mecánica", icono:"i-wrench",
+      fotos:["llaves-combinadas-8pz-1.jpg","llaves-combinadas-8pz-2.jpg"],
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:75 },
 
     { id:"CT-9040", nombre:"Llave ajustable 200 mm",
       sub:"cromo vanadio · boca hasta 24 mm",
