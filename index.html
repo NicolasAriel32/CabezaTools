@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CabezaTools · Herramientas para taller y obra · Don Orione, Buenos Aires</title>
-<meta name="description" content="Más de 50 herramientas de mano, medición y potencia. Stock real, precio de mayorista y pedido por WhatsApp. Envíos a todo el país, retiro sin cargo en Don Orione.">
+<meta name="description" content="Juegos de tubos, llaves combinadas y puntas para taller y obra. Stock real, precio de mayorista y pedido por WhatsApp. Envío a cargo del comprador, retiro sin cargo en Don Orione.">
 <meta name="theme-color" content="#08080a">
 <meta property="og:title" content="CabezaTools · Fierros que aguantan el laburo">
 <meta property="og:description" content="Catálogo de herramientas para taller y obra. Stock real, precio de mayorista, pedido por WhatsApp.">
@@ -15,7 +15,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"HardwareStore","name":"CabezaTools","image":"logo-cabezatools.jpg",
 "address":{"@type":"PostalAddress","addressLocality":"Don Orione","addressRegion":"Buenos Aires","addressCountry":"AR"},
-"priceRange":"$$","openingHours":"Mo-Fr 08:00-19:00, Sa 08:00-13:00","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"312"}}
+"priceRange":"$$","openingHours":"Mo-Fr 08:00-19:00, Sa 08:00-13:00"}
 </script>
 <style>
 /* ============================================================
@@ -451,20 +451,42 @@ h1.display em{font-style:normal;color:var(--accent-2);display:block}
 }
 .combo::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.07) 0 1px,transparent 1px 9px)}
 .combo::after{content:"";position:absolute;right:-10%;top:-20%;width:55%;height:150%;background:rgba(0,0,0,.28);transform:skewX(-14deg)}
-.combo .in{position:relative;z-index:2;max-width:30ch}
+.combo .in{position:relative;z-index:2}
 .combo .lbl{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.2em;color:#ffd7d9;text-transform:uppercase}
-.combo h3{font-family:var(--font-display);font-weight:900;font-size:clamp(2rem,9vw,3rem);text-transform:uppercase;margin:.3rem 0 .2rem;transform:skewX(-8deg);transform-origin:left;line-height:.9}
+.combo h3{font-family:var(--font-display);font-weight:900;font-size:clamp(1.7rem,7.5vw,2.6rem);text-transform:uppercase;margin:.3rem 0 .2rem;transform:skewX(-8deg);transform-origin:left;line-height:.95}
 .combo p{color:#ffe3e5;margin:0 0 1rem;font-size:var(--step--1)}
 .combo .btn{background:#0b0b0e;color:#fff}
-.combo svg{position:absolute;right:1rem;bottom:.5rem;width:110px;height:110px;z-index:1;opacity:.95}
+
+/* --- destacado: foto grande + precio grande + CTA directo a WhatsApp --- */
+.combo{display:grid;gap:1.1rem}
+.combo .sub{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#ffd7d9;margin:0 0 .6rem}
+.destpic{position:relative;z-index:2;border-radius:var(--r-md);overflow:hidden;
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.16)}
+/* las fotos del local son verticales (3:4). 4/5 recorta apenas y evita que el
+   bloque quede larguísimo en celular; con 4/3 se comía medio producto. */
+.destpic img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
+.destpic .plate{aspect-ratio:4/5}
+.destprice{display:flex;align-items:baseline;gap:.65rem;flex-wrap:wrap;margin:.1rem 0 1.1rem}
+.destprice b{font-family:var(--font-display);font-weight:900;line-height:.85;color:#fff;
+  font-size:clamp(2.6rem,13vw,4rem);letter-spacing:-.02em}
+.destprice s{color:#ffc9cc;opacity:.8;font-size:var(--step--1)}
+.destcta{width:100%;justify-content:center;gap:.55rem;font-size:1.05rem;padding:1.05rem 1.2rem}
+/* el bloque tenia un SVG decorativo posicionado en absoluto: que no afecte al icono del boton */
+.combo .destcta svg{position:static;width:22px;height:22px;opacity:1;flex:none}
+@media(min-width:760px){
+  .combo{grid-template-columns:.95fr 1.05fr;align-items:center;gap:1.9rem;padding:1.8rem}
+  .destcta{width:auto}
+}
 
 /* ============================ RESEÑA ============================ */
 .review{background:#101016;border:1.2px solid var(--border);border-radius:var(--r-md);padding:1.1rem}
 .stars{display:flex;gap:.15rem;align-items:center}
 .stars svg{width:20px;height:20px}
 .stars b{font-family:var(--font-display);font-weight:900;font-size:1.15rem;margin-left:.6rem;letter-spacing:.04em}
-.review blockquote{margin:.75rem 0 0;font-style:italic;color:#c4c4ce;font-size:var(--step--1)}
-.review cite{display:block;margin-top:.4rem;font-style:normal;color:var(--text-dim);font-family:var(--font-mono);font-size:.68rem}
+.review p{margin:.7rem 0 1rem;color:#c4c4ce;font-size:var(--step--1);max-width:52ch}
+.review .btn{background:#fff;color:#0b0b0e;font-weight:600}
+.review[hidden]{display:none}
 
 /* ============================ FAQ ============================ */
 .faq{margin-top:var(--sp-12)}
@@ -719,7 +741,7 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
       <b>Cabeza<i>Tools</i></b>
     </a>
     <div class="navdesk">
-      <a href="#catalogo">Catálogo</a><a href="#combo">Combos</a><a href="#envios">Envíos</a><a href="#faq">FAQ</a>
+      <a href="#catalogo">Catálogo</a><a href="#combo">Destacado</a><a href="#envios">Envíos</a><a href="#faq">FAQ</a>
     </div>
     <button class="cartbtn" id="openSheet" aria-label="Ver mi pedido">
       <svg width="26" height="26" aria-hidden="true"><use href="#i-cart"/></svg>
@@ -811,27 +833,30 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
     <div class="grid" id="grid"></div>
   </section>
 
-  <!-- ============ COMBO ============ -->
+  <!-- ============ DESTACADO ============ -->
   <section class="combo rv" id="combo">
+    <div class="destpic" id="destPic"></div>
     <div class="in">
-      <p class="lbl">Combo arranque</p>
-      <h3>Taller 360</h3>
-      <p>Las 8 herramientas esenciales del catálogo, en un solo pedido. Ahorrás 31% contra comprarlas por separado.</p>
-      <button class="btn" id="comboBtn" type="button">Armar combo</button>
+      <p class="lbl">El más completo del catálogo</p>
+      <h3 id="destNombre"></h3>
+      <p class="sub" id="destSub"></p>
+      <p id="destDesc"></p>
+      <p class="destprice"><b id="destPrecio"></b><s id="destAntes"></s></p>
+      <a class="btn btn-wa destcta" id="destBtn" href="#" target="_blank" rel="noopener">
+        <svg width="22" height="22" aria-hidden="true"><use href="#i-wa"/></svg>
+        <span>Pedilo por WhatsApp</span>
+      </a>
     </div>
-    <svg aria-hidden="true"><use href="#i-piston"/></svg>
   </section>
 
   <!-- ============ RESEÑA ============ -->
-  <section class="review rv">
+  <section class="review rv" id="resena" hidden>
     <div class="stars">
-      <svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg>
-      <svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg>
       <svg aria-hidden="true"><use href="#i-star"/></svg>
-      <b>4,9 · 312 opiniones</b>
+      <b id="resenaTitulo"></b>
     </div>
-    <blockquote>«Pedí a las 11 y a las 18 lo tenía en el taller. Precio de mayorista sin vueltas.»</blockquote>
-    <cite>Rubén M. — Lanús Oeste</cite>
+    <p id="resenaTexto"></p>
+    <a class="btn" id="resenaBtn" href="#" target="_blank" rel="noopener"></a>
   </section>
 
   <!-- ============ FAQ ============ -->
@@ -870,7 +895,7 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
       <li><a href="#faq">Lista mayorista</a></li><li><a href="#faq">Garantía</a></li></ul></div>
     <div class="fcol"><h4>Contacto</h4><ul>
       <li><a href="https://wa.me/5491122463840" target="_blank" rel="noopener">WhatsApp</a></li>
-      <li><a href="mailto:hola@cabezatools.com.ar">hola@cabezatools.com.ar</a></li>
+      <li><a href="mailto:cabezagarage@gestionint.site">cabezagarage@gestionint.site</a></li>
       <li><a href="#top">Don Orione, BA</a></li></ul></div>
   </div>
   <div class="wrap legal">
@@ -1173,37 +1198,59 @@ function setCat(cat){
 document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; renderGrid(); });
 document.getElementById("goSearch").addEventListener("click", ()=>document.getElementById("catalogo").scrollIntoView({behavior:"smooth"}));
 document.getElementById("sort").addEventListener("change", e => { state.sort = e.target.value; renderGrid(); });
-/* ================= COMBO «TALLER 360» =================
-   Los ítems salen de config.combo.productos en datos.js. Si esa lista no está,
-   caemos en los 8 más pedidos. La cantidad del texto y del aviso se calcula
-   sola: nunca más queda un "8" escrito a mano cuando el catálogo crece. */
-(function renderCombo(){
-  const btn = document.getElementById("comboBtn");
-  if(!btn) return;
-  const sec = btn.closest(".combo");
-  const cf  = CFG.combo || {};
-  const ids = (cf.productos && cf.productos.length ? cf.productos : []);
-  const items = (ids.length
-      ? ids.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean)
-      : PRODUCTS.slice().sort((a,b) => b.pop - a.pop).slice(0,8)
-    ).filter(p => p.stock);
+/* ================= DESTACADO =================
+   Foto grande del producto más caro que haya en stock, con su descripción, el
+   precio en grande y un botón que abre WhatsApp con ese producto ya escrito.
+   Se recalcula solo: el día que cargues algo más caro, pasa a ser este.      */
+(function renderDestacado(){
+  const sec = document.getElementById("combo");
+  if(!sec) return;
+  const enStock = PRODUCTS.filter(p => p.stock);
+  if(!enStock.length){ sec.remove(); return; }
+  const p = enStock.slice().sort((a,b) => b.p - a.p)[0];
 
-  if(items.length < 2){ if(sec) sec.remove(); return; }   // sin combo armado, no mostramos el bloque
+  const poner = (id, txt) => { const e = document.getElementById(id); if(e) e.textContent = txt; };
+  poner("destNombre", p.n);
+  poner("destSub",    p.s || "");
+  poner("destDesc",   p.d || "");
+  poner("destPrecio", money(p.p));
 
-  const lbl = sec.querySelector(".lbl"), tit = sec.querySelector("h3"), baj = sec.querySelector("p:not(.lbl)");
-  if(lbl && cf.etiqueta) lbl.textContent = cf.etiqueta;
-  if(tit && cf.titulo)   tit.textContent = cf.titulo;
-  if(baj) baj.textContent = String(cf.bajada ||
-      "Las {n} herramientas esenciales del catálogo, en un solo pedido.")
-    .replace("{n}", items.length).replace("{ahorro}", cf.ahorro ?? "");
-  if(cf.boton) btn.textContent = cf.boton;
+  const antes = document.getElementById("destAntes");
+  if(antes){ if(p.old) antes.textContent = money(p.old); else antes.remove(); }
 
-  btn.addEventListener("click", () => {
-    items.forEach(p => state.order.set(p.id, 1));
-    renderOrder(); renderGrid();
-    toast(`Combo armado · ${items.length} ítems`);
-    openSheet();
-  });
+  /* La foto usa el mismo respaldo que las tarjetas: si el archivo no está,
+     cae en la placa técnica en vez de dejar un hueco roto. */
+  const pic = document.getElementById("destPic");
+  if(pic) pic.innerHTML = mediaHTML(p, 0);
+
+  const btn = document.getElementById("destBtn");
+  if(btn){
+    const txt = `Hola CabezaTools, quiero pedir:\n• ${p.id} — ${p.n} — ${money(p.p)}`;
+    btn.href = `https://wa.me/${WA_NUM}?text=${encodeURIComponent(txt)}`;
+    btn.setAttribute("aria-label", `Pedir ${p.n} por WhatsApp`);
+  }
+})();
+
+/* ================= RESEÑA EN GOOGLE =================
+   El bloque arranca oculto (hidden en el HTML) y solo se muestra si hay un
+   link cargado en config.resenaLink. Así nunca queda un botón que no lleva
+   a ningún lado si todavía no tenés ficha. */
+(function renderResena(){
+  const sec = document.getElementById("resena");
+  if(!sec) return;
+  const link = (CFG.resenaLink || "").trim();
+  if(!link) return;                       // sin link, el bloque no aparece
+
+  const tit = document.getElementById("resenaTitulo");
+  const txt = document.getElementById("resenaTexto");
+  const btn = document.getElementById("resenaBtn");
+  if(tit) tit.textContent = CFG.resenaTitulo || "¿Compraste con nosotros?";
+  if(txt) txt.textContent = CFG.resenaTexto  || "Contá cómo te fue en Google.";
+  if(btn){
+    btn.textContent = CFG.resenaBoton || "Dejar mi reseña en Google";
+    btn.href = link;
+  }
+  sec.hidden = false;
 })();
 
 /* drawer */
@@ -1576,8 +1623,8 @@ if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
     if(fic) enviar("producto", {producto: fic.dataset.ficha, dispositivo});
   }, true);
 
-  const combo = document.getElementById("comboBtn");
-  if(combo) combo.addEventListener("click", () => enviar("combo", {dispositivo}));
+  const dest = document.getElementById("destBtn");
+  if(dest) dest.addEventListener("click", () => enviar("combo", {dispositivo}));
   document.addEventListener("click", e => {
     if(e.target.closest('a[href*="wa.me"]')) enviar("whatsapp", {dispositivo});
   }, true);

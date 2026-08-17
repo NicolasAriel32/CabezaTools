@@ -20,10 +20,21 @@ window.CT_DATA = {
     garantiaDias:     90,
     despachoHoras:    "24 H",
     corteDespacho:    "15 h",
-    envioGratisDesde: 0,          // 0 = no hay envío gratis, va a cargo del comprador
+    envioGratisDesde: 0,                    // 0 = sin envío gratis: va a cargo del comprador
     cuotas:           12,
     mayoristaDesde:   150000,
     carpetaFotos:     "fotos/",
+
+    /* Link para pedir reseña en Google. Si lo dejás vacío, el bloque de reseña
+       no se muestra (nunca un botón que no lleva a ningún lado).
+       Este abre la ficha "Cabeza GARAGE"; adentro está "Escribir una reseña".
+       Si algún día conseguís el Place ID (formato ChIJ...), podés cambiarlo por
+       https://search.google.com/local/writereview?placeid=TU_PLACE_ID
+       que abre el formulario directo, sin pasar por la ficha.                 */
+    resenaLink:  "https://www.google.com/maps?cid=459305922260846953",
+    resenaTitulo: "¿Compraste con nosotros?",
+    resenaTexto:  "Contá cómo te fue en Google. Nos ayuda a que otros talleres nos encuentren.",
+    resenaBoton:  "Dejar mi reseña en Google",
 
     /* Métricas del panel /admin. Mientras activo esté en false el sitio no
        manda un solo pedido a ningún lado. Cuando conectes Supabase, pegá acá
@@ -39,24 +50,22 @@ window.CT_DATA = {
     heroLinea1:   "Fierros que",
     heroLinea2:   "aguantan",
     heroDestaque: "el laburo.",
-    heroBajada:   "Más de 50 herramientas de mano, medición y potencia, elegidas una por una. Stock real, precio de mayorista y el pedido se cierra por WhatsApp.",
-    heroMetrica:  "+50",
+    heroBajada:   "Juegos de tubos, llaves y puntas elegidos uno por uno. Stock real, precio de mayorista y el pedido se cierra por WhatsApp.",
+    heroMetrica:  "6",
     heroMetricaLabel: "Productos",
 
     // Rubros del catálogo. La clave es el nombre que se muestra y el que usan
     // los productos en su campo "categoria". El número es lo que dice la tarjeta.
     conteoRubros: {
-      "Mecánica": 12, "Medición": 1, "Potencia": 4,
-      "Pinzas y alicates": 2, "Obra": 1, "Seguridad": 1
+      "Mecánica": 6
     },
     iconosRubros: {
-      "Mecánica": "i-socket", "Medición": "i-level", "Potencia": "i-drill",
-      "Pinzas y alicates": "i-pliers", "Obra": "i-hammer", "Seguridad": "i-gloves"
+      "Mecánica": "i-socket"
     },
 
     // Cartel "Hoy en el mostrador" (visible en pantalla grande). Códigos de producto.
     mostradorTitulo: "Hoy en el mostrador",
-    mostrador: ["CT-9010", "CT-1042", "CT-9060", "CT-9040"],
+    mostrador: ["CT-9100", "CT-9130", "CT-9110", "CT-9090"],
 
     /* Combo del bloque rojo. "productos" son los códigos que entran al pedido
        cuando tocan "Armar combo": poné exactamente los que querés vender juntos.
@@ -65,10 +74,9 @@ window.CT_DATA = {
       etiqueta: "Combo arranque",
       titulo:   "Taller 360",
       bajada:   "Las {n} herramientas esenciales del catálogo, en un solo pedido. Ahorrás {ahorro}% contra comprarlas por separado.",
-      ahorro:   31,
+      ahorro:   15,
       boton:    "Armar combo",
-      productos: ["CT-9010", "CT-9060", "CT-9040", "CT-9070",
-                  "CT-9080", "CT-3388", "CT-5120", "CT-8802"]
+      productos: ["CT-9100", "CT-9130", "CT-9110"]
     }
   },
 
@@ -83,7 +91,7 @@ window.CT_DATA = {
     cta: "Ver todo el catálogo",
     disparo: "scroll",     // "scroll" = cuando scrollea un poco  |  "tiempo" = a los N segundos
     segundos: 7,           // solo si disparo = "tiempo"
-    productos: ["CT-9010", "CT-9060", "CT-9040"],   // ids que se muestran
+    productos: ["CT-9100", "CT-9130", "CT-9110"],   // ids que se muestran
     unaVezPorVisita: true
   },
 
@@ -145,45 +153,21 @@ window.CT_DATA = {
      icono: i-socket · i-tap · i-level · i-drill · i-driver · i-bits · i-pliers ·
             i-gloves · i-wrench · i-hammer · i-piston
      link:  URL de la publicación externa (Mercado Libre, Tiendanube, etc).
-            Si está cargada, la tarjeta muestra el botón rojo "Comprar ↗".      */
+            Si está cargada, la tarjeta muestra el botón rojo "Comprar".
+
+     El 2026-08-17 se retiraron los productos sin fotos propias: quedaron solo
+     los seis de la sesión de fotos. Para reponer alguno está el historial de
+     git de este archivo (commit 3552c5e y anteriores).                        */
   productos: [
 
-    /* ---------------- POTENCIA ---------------- */
-    { id:"CT-9010", nombre:"Taladro atornillador inalámbrico 18V",
-      sub:"batería de litio · 2 velocidades · maletín",
-      descripcion:"El caballito de batalla del taller: perfora madera, chapa y plástico, y atornilla sin pasarse gracias al embrague de 15 posiciones. Viene con batería, cargador y maletín.",
-      precio:185000, precioAnterior:229000, categoria:"Potencia", icono:"i-drill",
-      fotos:["taladro-atornillador-18v.jpg","taladro-20v-uso-1.jpg","taladro-20v-uso-2.jpg"],
-      link:"", stock:true, etiqueta:"Top", popularidad:98 },
-
-    { id:"CT-9020", nombre:"Atornillador de impacto 18V",
-      sub:"encastre 1/4\" hex · 1.500 rpm",
-      descripcion:"Cuando el tornillo no cede, el impacto lo resuelve sin castigarte la muñeca. Ideal para tirafondos largos, terrazas y armado de estructuras.",
-      precio:162000, precioAnterior:null, categoria:"Potencia", icono:"i-drill",
-      fotos:["atornillador-impacto-18v.jpg"],
-      link:"", stock:true, etiqueta:"Nuevo", popularidad:79 },
-
-    { id:"CT-9030", nombre:"Taladro percutor 1/2\" 18V",
-      sub:"mandril sin llave · función percusión",
-      descripcion:"Con percusión entra en pared de ladrillo y hormigón liviano sin sufrir. El mandril sin llave te deja cambiar de mecha con una mano arriba del andamio.",
-      precio:248000, precioAnterior:null, categoria:"Potencia", icono:"i-drill",
-      fotos:["taladro-percutor-18v.jpg"],
-      link:"", stock:true, etiqueta:"", popularidad:74 },
-
     /* ---------------- MECÁNICA ---------------- */
-    { id:"CT-1042", nombre:'Torquímetro Zafe 1/4" Pro',
-      sub:"2,9 – 21 kg · con estuche",
-      descripcion:"Ajusta al par exacto que pide el fabricante, ni un kilo de más. Trinquete reversible y estuche rígido para que no se descalibre dando vueltas en la caja.",
-      precio:47000, precioAnterior:58900, categoria:"Mecánica", icono:"i-socket",
-      fotos:[], link:"", stock:true, etiqueta:"Top", popularidad:99 },
-
     { id:"CT-9060", nombre:"Juego de tubos y puntas 108 pz",
       sub:"CR-V · 1/4\" y 1/2\" · maletín rígido",
       descripcion:"Tubos, puntas, extensiones y crique en un solo maletín con cada pieza en su lugar. Cromo vanadio: aguanta el apriete sin redondear la cabeza del bulón.",
       precio:65000, precioAnterior:89900, categoria:"Mecánica", icono:"i-socket",
       fotos:["tubos-108-abierto-1.jpg","tubos-108-abierto-2.jpg",
              "tubos-108-abierto-3.jpg","tubos-108-caja.jpg"],
-      link:"", stock:true, etiqueta:"Top", popularidad:94 },
+      link:"", stock:true, etiqueta:"SALE", popularidad:94 },
 
     { id:"CT-9090", nombre:"Set de herramientas 46 pz",
       sub:"tubos + puntas · encastre 1/4\" · estuche rígido",
@@ -221,81 +205,6 @@ window.CT_DATA = {
       descripcion:"Las ocho medidas que salen todos los días, sin pagar por las que nunca usás. Mismo acero y misma terminación que el juego grande, en el tamaño que entra en cualquier bolso.",
       precio:15800, precioAnterior:null, categoria:"Mecánica", icono:"i-wrench",
       fotos:["llaves-combinadas-8pz-1.jpg","llaves-combinadas-8pz-2.jpg"],
-      link:"", stock:true, etiqueta:"Nuevo", popularidad:75 },
-
-    { id:"CT-9040", nombre:"Llave ajustable 200 mm",
-      sub:"cromo vanadio · boca hasta 24 mm",
-      descripcion:"Una sola llave para todas las medidas que aparecen sin avisar. Boca calibrada, mordaza pareja y mango con nervadura para que no se te escape con la mano engrasada.",
-      precio:12500, precioAnterior:null, categoria:"Mecánica", icono:"i-wrench",
-      fotos:["llave-ajustable-200.jpg","llave-ajustable-200-detalle.jpg","llave-ajustable-200-mano.jpg"],
-      link:"", stock:true, etiqueta:"", popularidad:86 },
-
-    { id:"CT-9050", nombre:"Juego 2 llaves ajustables 9\"",
-      sub:"pico loro + francesa · acero forjado",
-      descripcion:"El dúo clásico de plomería y mecánica pesada: una para sostener, otra para girar. Acero forjado en una sola pieza, sin juego en el tornillo sinfín.",
-      precio:23900, precioAnterior:null, categoria:"Mecánica", icono:"i-wrench",
-      fotos:["juego-llaves-ajustables.jpg"],
-      link:"", stock:true, etiqueta:"", popularidad:71 },
-
-    { id:"CT-2210", nombre:"Kit machos y terrajas 12 pz",
-      sub:"acero inoxidable · M3–M12",
-      descripcion:"Para rehacer una rosca comida sin tener que cambiar la pieza entera. Doce medidas métricas con portamachos y manija en estuche plástico.",
-      precio:20300, precioAnterior:null, categoria:"Mecánica", icono:"i-tap",
-      fotos:[], link:"", stock:true, etiqueta:"", popularidad:81 },
-
-    { id:"CT-5120", nombre:"Kit desarmadores 115 en 1",
-      sub:"precisión · premium",
-      descripcion:"Ciento quince puntas magnéticas para abrir desde un celular hasta un tablero de auto. Base antideslizante y mango giratorio para trabajo fino.",
-      precio:14999, precioAnterior:null, categoria:"Mecánica", icono:"i-driver",
-      fotos:[], link:"", stock:true, etiqueta:"", popularidad:85 },
-
-    { id:"CT-6077", nombre:"Juego puntas Torx / Allen 40 pz",
-      sub:"multiestría · caja rígida",
-      descripcion:"Torx, allen y multiestría en las medidas que siempre faltan. Puntas de una pulgada con retención magnética, van directo al atornillador.",
-      precio:18700, precioAnterior:null, categoria:"Mecánica", icono:"i-bits",
-      fotos:[], link:"", stock:true, etiqueta:"", popularidad:76 },
-
-    /* ---------------- PINZAS Y ALICATES ---------------- */
-    { id:"CT-9070", nombre:"Set de pinzas y alicates 6 pz",
-      sub:"universal · pico largo · corte · pinza pico loro",
-      descripcion:"Las seis que se usan todos los días, con mango aislado y filo templado. El juego que resuelve el 80% del trabajo eléctrico y de armado.",
-      precio:54000, precioAnterior:67000, categoria:"Pinzas y alicates", icono:"i-pliers",
-      fotos:["set-pinzas-alicates.jpg","set-pinzas-alicates-2.jpg"],
-      link:"", stock:true, etiqueta:"Oferta", popularidad:88 },
-
-    { id:"CT-7315", nombre:"Set mini pinzas artesano 5 pz",
-      sub:"alicates universales",
-      descripcion:"Cinco pinzas chicas para electrónica, bijouterie y modelismo. Punta de precisión y resorte de apertura para trabajar horas sin cansar la mano.",
-      precio:20000, precioAnterior:null, categoria:"Pinzas y alicates", icono:"i-pliers",
-      fotos:[], link:"", stock:true, etiqueta:"", popularidad:64 },
-
-    /* ---------------- OBRA ---------------- */
-    { id:"CT-9080", nombre:"Martillo carpintero uña 500 g",
-      sub:"cabeza forjada · mango antideslizante",
-      descripcion:"Cabeza forjada y templada, uña bien afilada para sacar el clavo torcido de una. El mango con grip absorbe el rebote en las jornadas largas.",
-      precio:14800, precioAnterior:null, categoria:"Obra", icono:"i-hammer",
-      fotos:["martillo-carpintero.jpg"],
-      link:"", stock:true, etiqueta:"", popularidad:77 },
-
-    /* ---------------- MEDICIÓN ---------------- */
-    { id:"CT-3388", nombre:"Nivel de mano 50 cm",
-      sub:"aluminio · 3 gotas",
-      descripcion:"Perfil de aluminio reforzado con tres gotas: horizontal, vertical y 45°. Base fresada, apoya parejo sobre revoque y sobre chapa.",
-      precio:8999, precioAnterior:11500, categoria:"Medición", icono:"i-level",
-      fotos:[], link:"", stock:true, etiqueta:"Oferta", popularidad:88 },
-
-    /* ---------------- POTENCIA · accesorios ---------------- */
-    { id:"CT-4501", nombre:"Extensor flexible p/ taladro",
-      sub:"set 10 puntas · 1/4\" hex",
-      descripcion:"Llega al tornillo que está detrás del motor o abajo de la bacha. Alma flexible de 300 mm más diez puntas de uso corriente.",
-      precio:10200, precioAnterior:null, categoria:"Potencia", icono:"i-drill",
-      fotos:[], link:"", stock:true, etiqueta:"Nuevo", popularidad:72 },
-
-    /* ---------------- SEGURIDAD ---------------- */
-    { id:"CT-8802", nombre:"Guantes antideslizantes",
-      sub:"trabajo · talles M a XL",
-      descripcion:"Palma con recubrimiento de látex rugoso: agarrás la herramienta aunque esté con aceite. Dorso de punto para que la mano transpire menos.",
-      precio:5000, precioAnterior:null, categoria:"Seguridad", icono:"i-gloves",
-      fotos:[], link:"", stock:true, etiqueta:"Top", popularidad:95 }
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:75 }
   ]
 };
