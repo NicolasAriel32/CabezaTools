@@ -56,6 +56,42 @@ body{
   padding-bottom:calc(var(--bar-h) + env(safe-area-inset-bottom));
   overflow-x:hidden;
 }
+/* ================= CAMPO DE PUNTOS QUE SIGUE AL MOUSE =================
+   Trama de puntos tenue sobre el fondo, con un halo que la enciende alrededor
+   del cursor. Solo se muestra en equipos con mouse real: en celular no hay
+   puntero que seguir y seria peso al pedo. Tambien se apaga si el sistema
+   pide menos movimiento. */
+#dotfield{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  display:none; contain:strict;
+}
+#dotfield::before, #dotfield::after{
+  content:""; position:absolute; inset:0;
+  background-image:radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0);
+  background-size:24px 24px;
+}
+/* capa base: el relieve que se ve siempre, muy tenue */
+#dotfield::before{ color:rgba(255,255,255,.10) }
+/* capa encendida: mismos puntos, mas brillantes, recortados por el halo */
+#dotfield::after{
+  color:rgba(255,120,128,.85);
+  -webkit-mask-image:radial-gradient(circle 190px at var(--mx,-500px) var(--my,-500px),
+    #000 0%, rgba(0,0,0,.5) 45%, transparent 72%);
+  mask-image:radial-gradient(circle 190px at var(--mx,-500px) var(--my,-500px),
+    #000 0%, rgba(0,0,0,.5) 45%, transparent 72%);
+}
+/* resplandor difuso por debajo de los puntos, para que no se vea plano */
+#dotfield .halo{
+  position:absolute; inset:0;
+  background:radial-gradient(circle 230px at var(--mx,-500px) var(--my,-500px),
+    rgba(225,18,28,.13) 0%, rgba(225,18,28,.05) 45%, transparent 70%);
+}
+@media (hover:hover) and (pointer:fine){ #dotfield{ display:block } }
+@media (prefers-reduced-motion:reduce){ #dotfield{ display:none !important } }
+/* el contenido va por encima de la trama */
+body > header, body > main, body > footer, body > .orderbar,
+body > .drawer, body > .scrim, body > .sheet, body > .fab{ position:relative; z-index:1 }
+
 img{max-width:100%; display:block}
 button,input,select{font:inherit; color:inherit}
 a{color:inherit}
@@ -629,6 +665,7 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
 </head>
 <body>
 <a class="skip" href="#catalogo">Ir al catálogo</a>
+<div id="dotfield" aria-hidden="true"><div class="halo"></div></div>
 
 <!-- ============ SPRITE DE ÍCONOS (dibujados, sin fotos de stock) ============ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1353,6 +1390,35 @@ setInterval(function tic(){
     btn.href = link;
   }
   sec.hidden = false;
+})();
+
+/* ================= HALO DEL CAMPO DE PUNTOS =================
+   Guarda la posicion del mouse y la escribe en dos variables CSS una vez por
+   frame. Sin requestAnimationFrame el mousemove dispara decenas de veces por
+   segundo y cada escritura repinta la mascara. */
+(function halo(){
+  const capa = document.getElementById("dotfield");
+  if(!capa) return;
+  if(!matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+
+  let x = 0, y = 0, pedido = false;
+  function pintar(){
+    pedido = false;
+    capa.style.setProperty("--mx", x + "px");
+    capa.style.setProperty("--my", y + "px");
+  }
+  addEventListener("pointermove", e => {
+    if(e.pointerType !== "mouse") return;     // si tocan la pantalla, no se enciende
+    x = e.clientX; y = e.clientY;
+    if(!pedido){ pedido = true; requestAnimationFrame(pintar); }
+  }, {passive:true});
+
+  /* al salir de la ventana el halo se va con el cursor, no queda pegado */
+  addEventListener("pointerleave", () => {
+    capa.style.setProperty("--mx", "-500px");
+    capa.style.setProperty("--my", "-500px");
+  });
 })();
 
 /* drawer */
