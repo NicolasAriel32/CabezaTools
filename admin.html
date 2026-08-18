@@ -608,7 +608,8 @@ function pintarCfg(){
     campo({k:"whatsappVisible", l:"WhatsApp como se muestra", val:c.whatsappVisible}) +
     campo({k:"horarioLargo", l:"Horario de atención", val:c.horarioLargo, full:true}) +
     campo({k:"garantiaDias", l:"Garantía (días)", tipo:"number", val:c.garantiaDias, min:0}) +
-    campo({k:"despachoHoras", l:"Despacho (texto corto)", val:c.despachoHoras, ph:"24 H"}) +
+    campo({k:"despachoHoras", l:"Entrega (texto corto)", val:c.despachoHoras, ph:"48-72 H"}) +
+    campo({k:"despachoLabel", l:"Etiqueta de la entrega", val:c.despachoLabel, ph:"Entregas GBA"}) +
     campo({k:"corteDespacho", l:"Hora de corte", val:c.corteDespacho, ph:"15 h"}) +
     campo({k:"envioGratisDesde", l:"Envío gratis desde ($)", tipo:"number", val:c.envioGratisDesde, min:0}) +
     campo({k:"cuotas", l:"Cuotas sin interés", tipo:"number", val:c.cuotas, min:0}) +

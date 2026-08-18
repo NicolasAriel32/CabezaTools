@@ -213,7 +213,7 @@ h1.display em{font-style:normal;color:var(--accent-2);display:block}
 .stats{display:flex;gap:0;margin-top:var(--sp-8);border-top:1px solid rgba(255,255,255,.09);padding-top:var(--sp-5)}
 .stats div{flex:1;padding-right:.75rem;border-right:1px solid var(--border)}
 .stats div:last-child{border:0}
-.stats b{display:block;font-family:var(--font-display);font-weight:900;font-size:1.85rem;line-height:1}
+.stats b{display:block;font-family:var(--font-display);font-weight:900;font-size:clamp(1.35rem,5.2vw,1.85rem);line-height:1;white-space:nowrap}
 .stats span{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mut)}
 
 /* ============================ BUSCADOR ============================ */
@@ -789,7 +789,7 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
   <div id="menuRubros"></div>
   <h3>Info</h3>
   <a href="#faq">Preguntas <span>faq</span></a>
-  <a href="#envios">Envíos <span>24h</span></a>
+  <a href="#envios">Envíos <span>48-72h</span></a>
   <a href="https://wa.me/5491122463840" target="_blank" rel="noopener">WhatsApp <span>8–19h</span></a>
 </nav>
 
@@ -831,7 +831,7 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
       </div>
       <div class="stats">
         <div><b>+50</b><span>Productos</span></div>
-        <div><b>24 H</b><span>Despacho</span></div>
+        <div><b>48-72 H</b><span>Entregas GBA</span></div>
         <div><b>90 D</b><span>Garantía</span></div>
       </div>
     </div>
@@ -871,8 +871,8 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
   <!-- ============ URGENCIA ============ -->
   <section class="urgency rv" id="envios">
     <div>
-      <b>Pedidos antes de las 15 h</b>
-      <p>salen el mismo día por Andreani / Cruz del Sur.</p>
+      <b>Entregas en 48–72 h en GBA</b>
+      <p>Pedidos confirmados antes de las 15 h se preparan el mismo día y salen por Andreani / Cruz del Sur.</p>
       <em>Envío a cargo del comprador · retiro en local sin cargo</em>
     </div>
   </section>
@@ -930,7 +930,7 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
     <details><summary>¿Hacen factura A?</summary>
       <p>Sí, factura A o B. Avisanos el CUIT en el mismo mensaje de WhatsApp y sale con la entrega.</p></details>
     <details><summary>¿Cuánto tarda el envío?</summary>
-      <p>Pedidos confirmados antes de las 15 h despachan el mismo día. AMBA en 24–48 h, interior 3–5 días hábiles por Andreani o Cruz del Sur.</p></details>
+      <p>Pedidos confirmados antes de las 15 h se preparan el mismo día. Entregas en GBA en 48–72 h, interior 3–5 días hábiles por Andreani o Cruz del Sur.</p></details>
     <details><summary>¿Venden al por mayor?</summary>
       <p>Sí. Desde 10 unidades o $150.000 aplicamos lista mayorista para talleres y revendedores. Pedí la lista por WhatsApp.</p></details>
     <details><summary>¿Tienen garantía?</summary>
@@ -1604,7 +1604,7 @@ if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
   const st = document.querySelectorAll(".stats div");
   if(st.length === 3){
     st[0].innerHTML = `<b>${CFG.heroMetrica||"+50"}</b><span>${CFG.heroMetricaLabel||"Productos"}</span>`;
-    st[1].innerHTML = `<b>${CFG.despachoHoras||"24 H"}</b><span>Despacho</span>`;
+    st[1].innerHTML = `<b>${CFG.despachoHoras||"48-72 H"}</b><span>${CFG.despachoLabel||"Entregas GBA"}</span>`;
     st[2].innerHTML = `<b>${CFG.garantiaDias||90} D</b><span>Garantía</span>`;
   }
 

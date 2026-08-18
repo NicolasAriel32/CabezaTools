@@ -18,7 +18,8 @@ window.CT_DATA = {
     horarioCorto:     "8–19 h",
     horarioLargo:     "Lun a Vie de 8 a 19 h · Sábados hasta las 13 h",
     garantiaDias:     90,
-    despachoHoras:    "24 H",
+    despachoHoras:    "48-72 H",
+    despachoLabel:    "Entregas GBA",
     corteDespacho:    "15 h",
     envioGratisDesde: 0,                    // 0 = sin envío gratis: va a cargo del comprador
     cuotas:           12,
