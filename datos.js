@@ -51,13 +51,13 @@ window.CT_DATA = {
     heroLinea2:   "aguantan",
     heroDestaque: "el laburo.",
     heroBajada:   "Juegos de tubos, llaves y puntas elegidos uno por uno. Stock real, precio de mayorista y el pedido se cierra por WhatsApp.",
-    heroMetrica:  "6",
+    heroMetrica:  "8",
     heroMetricaLabel: "Productos",
 
     // Rubros del catálogo. La clave es el nombre que se muestra y el que usan
     // los productos en su campo "categoria". El número es lo que dice la tarjeta.
     conteoRubros: {
-      "Mecánica": 6
+      "Mecánica": 8
     },
     iconosRubros: {
       "Mecánica": "i-socket"
@@ -154,6 +154,12 @@ window.CT_DATA = {
             i-gloves · i-wrench · i-hammer · i-piston
      link:  URL de la publicación externa (Mercado Libre, Tiendanube, etc).
             Si está cargada, la tarjeta muestra el botón rojo "Comprar".
+     oferta: { precio, hasta } — precio promocional con vencimiento. Mientras
+            está vigente, la tarjeta muestra ese precio, el normal tachado y un
+            contador en rojo. Cuando llega la hora se apaga solo y el precio
+            vuelve al normal, sin que haya que tocar nada.
+            "hasta" lleva la zona horaria (-03:00) para que el contador marque
+            lo mismo acá que desde cualquier otro lado.
 
      El 2026-08-17 se retiraron los productos sin fotos propias: quedaron solo
      los seis de la sesión de fotos. Para reponer alguno está el historial de
@@ -175,6 +181,7 @@ window.CT_DATA = {
       precio:25000, precioAnterior:null, categoria:"Mecánica", icono:"i-socket",
       fotos:["set-46-abierto-1.jpg","set-46-abierto-2.jpg",
              "set-46-abierto-3.jpg","set-46-caja-1.jpg","set-46-caja-2.jpg"],
+      oferta:{ precio:22500, hasta:"2026-08-20T14:00:00-03:00" },
       link:"", stock:true, etiqueta:"Nuevo", popularidad:83 },
 
     { id:"CT-9100", nombre:"Caja de herramientas 40 pz",
@@ -183,6 +190,7 @@ window.CT_DATA = {
       precio:9900, precioAnterior:null, categoria:"Mecánica", icono:"i-socket",
       fotos:["set-40-abierto-1.jpg","set-40-abierto-2.jpg",
              "set-40-abierto-3.jpg","set-40-caja-1.jpg","set-40-caja-2.jpg"],
+      oferta:{ precio:8800, hasta:"2026-08-20T14:00:00-03:00" },
       link:"", stock:true, etiqueta:"Nuevo", popularidad:80 },
 
     { id:"CT-9110", nombre:"Criquera 1/2\" + 10 tubos + extensión",
@@ -205,6 +213,20 @@ window.CT_DATA = {
       descripcion:"Las ocho medidas que salen todos los días, sin pagar por las que nunca usás. Mismo acero y misma terminación que el juego grande, en el tamaño que entra en cualquier bolso.",
       precio:15800, precioAnterior:null, categoria:"Mecánica", icono:"i-wrench",
       fotos:["llaves-combinadas-8pz-1.jpg","llaves-combinadas-8pz-2.jpg"],
-      link:"", stock:true, etiqueta:"Nuevo", popularidad:75 }
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:75 },
+
+    { id:"CT-9140", nombre:"Destornillador por unidad",
+      sub:"punta plana o Phillips · mango engomado",
+      descripcion:"El de todos los días, al precio que se puede pagar. Mango engomado con nervadura para que no patine con la mano sucia, y punta templada que no se redondea al primer apriete. Elegís plana o Phillips al hacer el pedido.",
+      precio:2000, precioAnterior:null, categoria:"Mecánica", icono:"i-driver",
+      fotos:["destornillador-unidad.jpg"],
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:70 },
+
+    { id:"CT-9150", nombre:"Llave traba embrague 150cc",
+      sub:"vaso de 4 uñas · acero fosfatado",
+      descripcion:"Traba la campana del embrague para que puedas aflojar o apretar la tuerca central sin que gire todo el conjunto. Es la herramienta que separa hacer el trabajo bien de arruinar el dentado a destornillador y martillo. Se usa con crique.",
+      precio:16500, precioAnterior:null, categoria:"Mecánica", icono:"i-socket",
+      fotos:["llave-embrague-150-uso.jpg","llave-embrague-150-producto.jpg"],
+      link:"", stock:true, etiqueta:"Nuevo", popularidad:73 }
   ]
 };

@@ -479,6 +479,32 @@ h1.display em{font-style:normal;color:var(--accent-2);display:block}
   .destcta{width:auto}
 }
 
+/* ======================= CONTADOR DE OFERTA =======================
+   Rojo, monoespaciado y con tabular-nums para que los dígitos no bailen
+   al cambiar cada segundo. */
+/* En la tarjeta el ancho es poco: etiqueta arriba y reloj abajo, alineados a
+   la izquierda. En una fila sola el reloj se iba al borde y quedaba torcido. */
+.cdown{
+  display:flex;flex-direction:column;align-items:flex-start;gap:.18rem;
+  margin:.5rem 0 0;padding:.45rem .6rem;
+  background:rgba(220,53,69,.10);border:1px solid rgba(220,53,69,.42);
+  border-radius:var(--r-sm,4px);
+}
+.cdown .lbl{
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--accent-2,#dc3545);font-weight:600;line-height:1.2;
+}
+.cdown .clock{
+  font-family:var(--font-mono);font-weight:600;font-size:1.08rem;line-height:1;
+  color:var(--accent-2,#dc3545);font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+.cdown[data-urgente="true"]{background:rgba(220,53,69,.18);border-color:rgba(220,53,69,.75)}
+@media (prefers-reduced-motion:no-preference){
+  .cdown[data-urgente="true"] .clock{animation:cdpulse 1.6s ease-in-out infinite}
+}
+@keyframes cdpulse{0%,100%{opacity:1}50%{opacity:.55}}
+.ficha .cdown{margin-top:.7rem}
+
 /* ============================ RESEÑA ============================ */
 .review{background:#101016;border:1.2px solid var(--border);border-radius:var(--r-md);padding:1.1rem}
 .stars{display:flex;gap:.15rem;align-items:center}
@@ -994,21 +1020,39 @@ function descuentoDe(prod){
   return {pct, nombre};
 }
 
-const PRODUCTS = (DATA.productos||[]).map(x => {
+/* Oferta con vencimiento: devuelve la hora de fin en milisegundos si todavía
+   está vigente, o 0 si ya pasó (o si el producto no tiene oferta cargada).
+   Se evalúa en cada render, así el precio vuelve solo cuando se termina. */
+function ofertaVigente(x){
+  const o = x.oferta;
+  if(!o || !o.precio || !o.hasta) return 0;
+  const fin = Date.parse(o.hasta);
+  if(isNaN(fin) || fin <= Date.now()) return 0;
+  return fin;
+}
+
+function normalizar(x){
   const d = descuentoDe(x);
   const final = d.pct ? Math.round(x.precio * (1 - d.pct/100) / 100) * 100 : x.precio;
   const et = x.etiqueta || "";
+  const finOferta = ofertaVigente(x);
+  /* La oferta con contador manda sobre cualquier promo por categoría: es un
+     precio puesto a mano, no un porcentaje calculado. */
+  const pct = finOferta ? Math.round((1 - x.oferta.precio / final) * 100) : 0;
   return {
     id:x.id, n:x.nombre, s:x.sub, d:x.descripcion || "", cat:x.categoria, ic:x.icono || "i-wrench",
     fotos: (x.fotos && x.fotos.length ? x.fotos : (x.foto ? [x.foto] : [])),
     link:(x.link||"").trim(),
-    p: final,
-    old: d.pct ? x.precio : (x.precioAnterior || null),
-    badge: d.pct ? ("-" + d.pct + "%") : (et || null),
-    bcls: d.pct ? "off" : (et === "Nuevo" ? "new" : (et === "Oferta" ? "off" : "")),
+    p: finOferta ? x.oferta.precio : final,
+    old: finOferta ? final : (d.pct ? x.precio : (x.precioAnterior || null)),
+    finOferta,
+    badge: finOferta ? ("-" + pct + "%") : (d.pct ? ("-" + d.pct + "%") : (et || null)),
+    bcls: finOferta ? "" : (d.pct ? "off" : (et === "Nuevo" ? "new" : (et === "Oferta" ? "off" : ""))),
     pop: x.popularidad || 0, stock: x.stock !== false, promo: d.nombre
   };
-});
+}
+
+let PRODUCTS = (DATA.productos||[]).map(normalizar);
 
 /* foto con respaldo a la placa técnica si el producto todavía no tiene foto
    (o si el archivo no está en fotos/): el día que cargues la foto, el
@@ -1068,6 +1112,16 @@ function visible(){
   return list.sort(by[state.sort]);
 }
 
+/* Contador en rojo de la oferta. Sale vacío si el producto no tiene una
+   vigente, así el mismo HTML sirve para todas las tarjetas. */
+function cuentaHTML(p){
+  if(!p.finOferta) return "";
+  return `<p class="cdown" data-fin="${p.finOferta}">
+    <span class="lbl">Oferta · termina en</span>
+    <b class="clock" aria-live="off">--:--:--</b>
+  </p>`;
+}
+
 function cardHTML(p){
   const inOrder = state.order.has(p.id);
   return `<article class="card">
@@ -1077,6 +1131,7 @@ function cardHTML(p){
       <p class="sub">${p.s}</p>
       ${p.d ? `<p class="desc">${p.d}</p>` : ""}
       <p class="price">${money(p.p)}${p.old?`<span class="old">${money(p.old)}</span>`:""}</p>
+      ${cuentaHTML(p)}
     </div>
     ${p.link ? `
     <div class="acts">
@@ -1103,6 +1158,7 @@ function renderGrid(){
       <p>No encontramos nada con «${state.q||state.cat}». Probá con otra palabra o pedilo directo por WhatsApp: lo conseguimos.</p>
       <a class="btn btn-wa" href="https://wa.me/${WA_NUM}?text=${encodeURIComponent("Hola, busco: "+(state.q||state.cat))}" target="_blank" rel="noopener">Consultar por WhatsApp</a>
     </div>`;
+  if(typeof pintarContadores === "function") pintarContadores();
 }
 
 /* ================= PEDIDO ================= */
@@ -1230,6 +1286,41 @@ document.getElementById("sort").addEventListener("change", e => { state.sort = e
     btn.setAttribute("aria-label", `Pedir ${p.n} por WhatsApp`);
   }
 })();
+
+/* ================= RELOJ DE LAS OFERTAS =================
+   Un solo intervalo para todos los contadores de la página. Cuando alguno
+   llega a cero se recalculan los productos y se vuelve a pintar: el precio
+   promocional desaparece solo y queda el normal, sin recargar ni tocar nada. */
+const dosCifras = n => String(n).padStart(2, "0");
+
+/* Pinta todos los contadores que haya en pantalla. Devuelve true si alguno
+   llegó a cero, que es la señal para recalcular precios. Se llama al terminar
+   cada render, así el reloj nunca queda un segundo en blanco. */
+function pintarContadores(){
+  const nodos = document.querySelectorAll(".cdown[data-fin]");
+  if(!nodos.length) return false;
+  const ahora = Date.now();
+  let vencio = false;
+
+  nodos.forEach(nodo => {
+    const resta = Number(nodo.dataset.fin) - ahora;
+    const reloj = nodo.querySelector(".clock");
+    if(resta <= 0){ vencio = true; if(reloj) reloj.textContent = "00:00:00"; return; }
+    const s = Math.floor(resta / 1000);
+    if(reloj) reloj.textContent =
+      `${dosCifras(Math.floor(s/3600))}:${dosCifras(Math.floor(s/60)%60)}:${dosCifras(s%60)}`;
+    nodo.dataset.urgente = resta < 3600000 ? "true" : "false";   // última hora
+  });
+  return vencio;
+}
+
+setInterval(function tic(){
+  if(pintarContadores()){
+    PRODUCTS = (DATA.productos||[]).map(normalizar);   // la oferta venció: precios al normal
+    renderGrid();
+    if(fProd){ const f = PRODUCTS.find(x => x.id === fProd.id); if(f) fProd = f; }
+  }
+}, 1000);
 
 /* ================= RESEÑA EN GOOGLE =================
    El bloque arranca oculto (hidden en el HTML) y solo se muestra si hay un
@@ -1375,11 +1466,12 @@ function abrirFicha(id, empujar){
   desc.textContent = p.d || ""; desc.hidden = !p.d;
   document.getElementById("fichaPrecio").innerHTML =
     `<span>${money(p.p)}</span>${p.old ? `<span class="old">${money(p.old)}</span>` : ""}` +
-    (p.badge ? `<span class="et ${p.bcls||""}">${p.badge}</span>` : "");
+    (p.badge ? `<span class="et ${p.bcls||""}">${p.badge}</span>` : "") +
+    cuentaHTML(p);
   document.getElementById("fichaStock").innerHTML = p.stock
     ? `<b>En stock</b> · Garantía ${CFG.garantiaDias||90} días`
     : `<b class="no">Sin stock</b> · consultanos la reposición`;
-  pintarFoto(); pintarFichaActs();
+  pintarFoto(); pintarFichaActs(); pintarContadores();
   fichaInner.scrollTop = 0;
   ficha.dataset.open = "true"; ficha.setAttribute("aria-hidden","false");
   document.getElementById("fichaClose").focus();
