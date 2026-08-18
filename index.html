@@ -993,7 +993,18 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
   </div>
 </div>
 
-<script src="datos.js"></script>
+<script>
+/* datos.js es el catalogo y cambia con cada actualizacion de precios. Vercel le
+   pone max-age=14400 (4 h) por ser un .js estatico y no respeta la regla de
+   Cache-Control de vercel.json, asi que quien ya visito el sitio seguia viendo
+   precios viejos aunque el HTML fuera nuevo. index.html si se sirve siempre
+   fresco, de modo que le agregamos la version desde aca: cambia cada minuto,
+   con lo cual una actualizacion se ve como maximo un minuto despues y las
+   paginas visitadas dentro del mismo minuto siguen usando la cache.
+   document.write mantiene el orden de carga: el resto del script necesita que
+   window.CT_DATA ya exista. */
+document.write('<scr' + 'ipt src="datos.js?v=' + Math.floor(Date.now()/60000) + '"><\/scr' + 'ipt>');
+</script>
 <script>
 /* ================= DATOS (todo sale de datos.js) ================= */
 const DATA = window.CT_DATA || {config:{}, promos:[], productos:[], popup:{}};
