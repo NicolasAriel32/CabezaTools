@@ -40,6 +40,21 @@ PUBLICAR (VERCEL)
   admin.html y ver-en-celular.html NO se publican (estan en .vercelignore).
 
 
+VISTA PREVIA EN OTRO SITIO (?vitrina=1)
+---------------------------------------
+  Si abris el sitio con  ?vitrina=1  al final de la direccion, pasan dos cosas:
+  no se abre la ventana de destacados, y la carga NO se cuenta como visita en
+  el panel /admin.
+
+  Es para cuando el sitio se muestra adentro del marco de otra pagina (la
+  seccion de casos de gestionint.site). Ahi nadie scrollea, asi que la ventana
+  saltaria sola a los 18 segundos y taparia justo lo que se esta mirando; y
+  cada persona que entra a esa pagina apareceria en tus metricas como si
+  hubiera venido aca.
+
+  Para quien entra por el link normal no cambia absolutamente nada.
+
+
 PANEL PRIVADO /admin
 --------------------
   Entras con mail y contrasena. Muestra:

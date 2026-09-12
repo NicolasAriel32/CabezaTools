@@ -88,9 +88,15 @@ body{
 }
 @media (hover:hover) and (pointer:fine){ #dotfield{ display:block } }
 @media (prefers-reduced-motion:reduce){ #dotfield{ display:none !important } }
-/* el contenido va por encima de la trama */
-body > header, body > main, body > footer, body > .orderbar,
-body > .drawer, body > .scrim, body > .sheet, body > .fab{ position:relative; z-index:1 }
+/* El contenido va por encima de la trama.
+   OJO: acá van SOLO los bloques que ya estan en la corriente del documento.
+   El menu lateral, el velo, la hoja del pedido y la barra de pedido son
+   position:fixed y tienen su propio z-index: si se los sumaba a esta regla,
+   este selector (mas especifico) les ganaba y los devolvia a la corriente.
+   El menu lateral, que mide 403px de alto, quedaba empujando TODA la pagina
+   hacia abajo: se entraba al sitio y lo primero era una pantalla en blanco.
+   La hoja del pedido hacia lo mismo al final de la pagina. */
+body > header, body > main, body > footer{ position:relative; z-index:1 }
 
 img{max-width:100%; display:block}
 button,input,select{font:inherit; color:inherit}
@@ -634,7 +640,12 @@ footer{margin-top:var(--sp-16);border-top:1px solid var(--border);background:var
 }
 /* ============================ ≥1000px (desktop) ============================ */
 .hero-side{display:none}
-.hero-side .plate{background:rgba(8,8,10,.55);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.4rem;backdrop-filter:blur(4px)}
+/* .plate es, por defecto, position:absolute inset:0 (la placa de las fotos de
+   producto). Acá se la reusa como panel del hero, así que hay que devolverla a
+   la corriente: si no, se posicionaba contra .hero —que es relative— y tapaba
+   el título, la bajada y los dos botones con un panel de 1220x691. */
+.hero-side .plate{position:relative;inset:auto;
+  background:rgba(8,8,10,.55);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.4rem;backdrop-filter:blur(4px)}
 .hero-side .plate .row{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.6rem 0;
   border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:.74rem;color:var(--text);
   text-decoration:none;transition:.16s var(--ease)}
@@ -1684,6 +1695,13 @@ if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
   const items = (POPCF.productos||[]).map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
   if(!POPCF.activo || !items.length){ el.remove(); return; }
 
+  /* ?vitrina=1 apaga esta ventana. Es para cuando el sitio se muestra adentro
+     del marco de otra página (la sección de casos de gestionint.site): ahí nadie
+     scrollea, así que se dispararía el respaldo de los 18 segundos y la ventana
+     taparía el sitio justo cuando lo están mirando. No cambia nada para quien
+     entra por el link normal. */
+  if(new URLSearchParams(location.search).get("vitrina") === "1"){ el.remove(); return; }
+
   document.getElementById("popTitle").innerHTML = String(POPCF.titulo||"Lo que más sale").replace(/(\S+)\s*$/, "<i>$1</i>");
   document.getElementById("popSub").textContent = POPCF.bajada || "";
   document.getElementById("popCta").textContent = POPCF.cta || "Ver todo el catálogo";
@@ -1731,6 +1749,11 @@ if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
   if(!M.activo || !M.url || !M.clave) return;
   if(location.protocol === "file:") return;        // abierto con doble clic: no medimos
   if(navigator.doNotTrack === "1") return;         // respetamos "no rastrear" del navegador
+  /* ?vitrina=1: el sitio se está mostrando adentro del marco de otra página.
+     Eso no es una visita: si lo contáramos, cada persona que entra a la sección
+     de casos de gestionint.site aparecería en el panel como si hubiera venido
+     acá, y las métricas dejarían de servir para decidir nada. */
+  if(new URLSearchParams(location.search).get("vitrina") === "1") return;
 
   let sesion;
   try {
